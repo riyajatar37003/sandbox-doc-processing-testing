@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.backends._legacy:_Backend"
+
+[project]
+name = "sandbox-doc-processing-testing"
+version = "0.1.0"
+description = "Unified automation for ServiceNow Now Assist document processing — QnA evaluation and document generation (PPT/PDF/DOCX)"
+requires-python = ">=3.10"
+dependencies = [
+    "requests>=2.31.0",
+    "python-dotenv>=1.0.0",
+    "pyotp>=2.9.0",
+    "urllib3>=2.0.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest", "ruff"]

@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+*.egg
+.eggs/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env files with secrets
+.env
+.env.local
+.env.instance
+
+# Results and outputs (keep folder structure via .gitkeep, ignore data)
+qna_eval/results/*
+!qna_eval/results/.gitkeep
+doc_gen/datasets/generated/*
+!doc_gen/datasets/generated/.gitkeep
+doc_gen/datasets/sources/*
+!doc_gen/datasets/sources/.gitkeep
+
+# Debug dumps
+debug/
