@@ -226,6 +226,6 @@ sandbox-doc-processing-testing/
     utterances.json      # turn sequence (editable, no code changes needed)
     datasets/
       sources/           # input files to batch-process
-      generated/         # generated PPT/PDF/DOCX output, one timestamped folder per run
+      generated/         # one timestamped folder per run: output file(s) + _run.log + _timing.json
   config/.env.example    # template for qna_eval/.env.instance
 ```
