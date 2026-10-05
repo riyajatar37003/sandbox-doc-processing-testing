@@ -1,0 +1,17 @@
+[
+  {
+    "id": "test-pdf",
+    "file": "/Users/riyaj.atar/Library/CloudStorage/OneDrive-ServiceNow/offglide-services/pptx-eval/qna-eval/dataset/pdf/pdf_01_incident_report_inc0001234.pdf",
+    "question": "What is the incident number and what was the resolution?"
+  },
+  {
+    "id": "test-docx",
+    "file": "/Users/riyaj.atar/Library/CloudStorage/OneDrive-ServiceNow/offglide-services/pptx-eval/qna-eval/dataset/office/off_01_incident_report.docx",
+    "question": "Summarize the key details of this incident report in 2-3 sentences."
+  },
+  {
+    "id": "test-pptx",
+    "file": "/Users/riyaj.atar/Library/CloudStorage/OneDrive-ServiceNow/offglide-services/pptx-eval/qna-eval/dataset/office/off_07_it_qbr_q1_2025.pptx",
+    "question": "What are the main topics covered in this quarterly business review?"
+  }
+]

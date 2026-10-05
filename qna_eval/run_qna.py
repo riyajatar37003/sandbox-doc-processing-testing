@@ -216,17 +216,44 @@ def main() -> None:
             _save()
     else:
         log(f"Running {len(cases)} case(s) with {args.workers} parallel worker(s)...")
+
+        # Pre-authenticate all workers SEQUENTIALLY first. Logging in from the
+        # same account concurrently can invalidate each other's OAuth auth
+        # codes (seen as "oauth_token.do failed: 401 access_denied"), so each
+        # worker's one-time login happens before any of them start sending
+        # messages, never interleaved with another worker's login.
+        worker_clients: list[NextWaveClient] = []
+        for wi in range(args.workers):
+            worker_clients.append(connect(cfg, fetch_trace))
+            log(f"  worker {wi + 1}/{args.workers} authenticated")
+
         _thread_local = threading.local()
+        _next_slot = iter(range(args.workers))
+        _slot_lock = threading.Lock()
 
         def _client_for_thread() -> NextWaveClient:
             c = getattr(_thread_local, "client", None)
             if c is None:
-                c = connect(cfg, fetch_trace)
+                with _slot_lock:
+                    slot = next(_next_slot)
+                c = worker_clients[slot]
                 _thread_local.client = c
             return c
 
         def _run(case: dict) -> dict:
-            return ask_one(_client_for_thread(), case, fetch_trace, args.timeout)
+            # Never let an exception here (e.g. a dead session) escape and take
+            # down the whole batch -- one bad case must not lose every other
+            # result that already succeeded.
+            try:
+                return ask_one(_client_for_thread(), case, fetch_trace, args.timeout)
+            except Exception as e:  # noqa: BLE001
+                cid = case.get("id") or Path(case["file"]).stem
+                log(f"[{cid}] WORKER ERROR: {type(e).__name__}: {e}")
+                return {
+                    "id": cid, "file": case.get("file", ""), "question": case.get("question", ""),
+                    "answer": "", "error": f"{type(e).__name__}: {e}", "runs": [], "thread_id": "",
+                    "ttfb_ms": 0, "response_time_ms": 0, "elapsed_s": 0,
+                }
 
         with ThreadPoolExecutor(max_workers=args.workers, thread_name_prefix="qna") as pool:
             futures = {pool.submit(_run, c): c for c in cases}
