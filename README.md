@@ -130,7 +130,10 @@ Then run:
 python3 doc_gen/run_doc_generation.py --file doc_gen/datasets/sources/your_file.md
 ```
 
-**Where is the generated file?** Look in `doc_gen/datasets/generated/` — a new folder named with today's date/time will appear (e.g. `20261002_103000/`), containing the generated PowerPoint.
+**Where is the generated file?** Look in `doc_gen/datasets/generated/` — a new folder named with today's date/time will appear (e.g. `20261002_103000/`), containing:
+- the generated PowerPoint (or PDF/DOCX)
+- `_run.log` — the full step-by-step console output for that run (what was asked, what came back, what was saved)
+- `_timing.json` — how long each step took: time-to-first-byte (`ttfb_ms`), total response time (`response_time_ms`), and wall-clock seconds (`elapsed_s`) for each turn, plus the total time for the whole file
 
 This also sets `DOC_GEN_*` environment variables for the instance it should use — see the "Document generation" section below for details. If you don't set them, it falls back to the shared `nwdemo` test instance defaults, which may or may not work for you; ask the project owner for the right instance/login to use for generation if `run_doc_generation.py` fails with a "missing env vars" error.
 

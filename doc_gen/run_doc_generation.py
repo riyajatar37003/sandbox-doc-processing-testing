@@ -100,8 +100,32 @@ USERNAME_POOL = [u.strip() for u in os.getenv(
 ).split(",") if u.strip()]
 
 
+# Set by main() once the output folder is known, so every log() line also
+# lands in <output_dir>/_run.log -- not just the terminal. A lock guards
+# writes since --workers > 1 means multiple threads call log() concurrently.
+_log_file = None
+_log_lock = threading.Lock()
+
+
 def log(msg: str) -> None:
-    print(f"[{time.strftime('%H:%M:%S')}] {msg}", flush=True)
+    line = f"[{time.strftime('%H:%M:%S')}] {msg}"
+    print(line, flush=True)
+    if _log_file is not None:
+        with _log_lock:
+            _log_file.write(line + "\n")
+            _log_file.flush()
+
+
+# Per-file timing records (ttfb/response-time per turn, plus total wall-clock
+# per file), collected across however many threads are running and written
+# out as <output_dir>/_timing.json at the end of the run.
+_timings: list[dict[str, Any]] = []
+_timings_lock = threading.Lock()
+
+
+def _record_timing(entry: dict[str, Any]) -> None:
+    with _timings_lock:
+        _timings.append(entry)
 
 
 def load_turns(utterances_file: str) -> list[dict[str, Any]]:
@@ -232,16 +256,39 @@ def process_one(
 
     thread_id: str | None = None
     ok_overall = True
+    file_t0 = time.time()
+    turn_timings: list[dict[str, Any]] = []
+
+    def _finish(ok: bool) -> bool:
+        _record_timing({
+            "file": source_path.name,
+            "worker": worker_tag,
+            "ok": ok,
+            "elapsed_s": round(time.time() - file_t0, 1),
+            "turns": turn_timings,
+        })
+        return ok
 
     for i, turn in enumerate(turns, 1):
         label = turn.get("label") or turn["id"]
         log(f"  Turn {i}/{len(turns)} [{turn['id']}]: {label}...")
 
         attach = [str(source_path)] if turn["attach_source_file"] else None
+        turn_t0 = time.time()
         result = client.send_message(turn["utterance"], thread_id=thread_id, attachment_files=attach)
+        turn_elapsed_s = round(time.time() - turn_t0, 1)
+        turn_timings.append({
+            "turn_id": turn["id"],
+            "ttfb_ms": result.ttfb_ms,
+            "response_time_ms": result.response_time_ms,
+            "elapsed_s": turn_elapsed_s,
+            "ok": result.ok,
+        })
+        log(f"    timing: ttfb={result.ttfb_ms}ms response_time={result.response_time_ms}ms elapsed={turn_elapsed_s}s")
+
         if not result.ok:
             log(f"  FAILED turn '{turn['id']}': {result.error}")
-            return False
+            return _finish(False)
         thread_id = result.thread_id
         log(f"    reply: {len(result.response_text)} chars, thread={thread_id[:12]}...")
         if len(result.response_text) < 200:
@@ -323,7 +370,7 @@ def process_one(
         out_path.write_bytes(data)
         log(f"    saved -> {out_path} ({len(data)} bytes)")
 
-    return ok_overall
+    return _finish(ok_overall)
 
 
 _thread_local = threading.local()
@@ -430,7 +477,18 @@ def main() -> None:
         run_stamp = time.strftime("%Y%m%d_%H%M%S")
         output_dir = Path(DEFAULT_OUTPUT_ROOT) / run_stamp
     output_dir.mkdir(parents=True, exist_ok=True)
+
+    # From here on, every log() line is also written to <output_dir>/_run.log,
+    # so the full console transcript for this run is saved alongside its output.
+    global _log_file
+    _log_file = open(output_dir / "_run.log", "a")
     log(f"Output folder for this run: {output_dir}")
+
+    def _finalize(summary: str) -> None:
+        log(summary)
+        (output_dir / "_timing.json").write_text(json.dumps(_timings, indent=2))
+        log(f"Timing data -> {output_dir / '_timing.json'}")
+        _log_file.close()
 
     if args.file:
         source_files = [Path(args.file)]
@@ -490,7 +548,7 @@ def main() -> None:
                 succeeded += 1
             else:
                 failed += 1
-        log(f"Done. succeeded={succeeded} failed={failed} skipped={skipped} reconnects={reconnects}")
+        _finalize(f"Done. succeeded={succeeded} failed={failed} skipped={skipped} reconnects={reconnects}")
         return
 
     # --workers > 1: each worker thread logs in on its own (its own
@@ -515,7 +573,7 @@ def main() -> None:
             else:
                 failed += 1
 
-    log(f"Done. succeeded={succeeded} failed={failed} skipped={skipped}")
+    _finalize(f"Done. succeeded={succeeded} failed={failed} skipped={skipped}")
 
 
 if __name__ == "__main__":
