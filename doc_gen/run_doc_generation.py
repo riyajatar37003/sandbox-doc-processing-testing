@@ -63,9 +63,24 @@ from typing import Any
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
+from dotenv import load_dotenv  # noqa: E402
+
 from nextwave import NextWaveClient, NextWaveConfig  # noqa: E402
 from nextwave.models import NextWaveError  # noqa: E402
 from nextwave.parsing import extract_file_attachments  # noqa: E402
+
+HERE = Path(__file__).resolve().parent
+
+# Load credentials from a gitignored .env.instance file instead of requiring
+# manual `export`s every session. Checked in order, first found wins (an
+# already-exported shell var still always takes priority over either file):
+#   1. doc_gen/.env.instance      -- generation-specific overrides, if present
+#   2. ../qna_eval/.env.instance  -- the shared instance file from QnA setup
+#      (its NW_USERNAME/NW_PASSWORD/DEPLOYMENT_DOC_ID are reused below as
+#      DOC_GEN_* fallbacks, so one shared .env.instance covers both tools).
+for _env_file in (HERE / ".env.instance", HERE.parent / "qna_eval" / ".env.instance"):
+    if _env_file.exists():
+        load_dotenv(_env_file)
 
 DEFAULT_SOURCE_DIR = os.getenv("DOC_GEN_SOURCE_DIR", os.path.join(os.path.dirname(__file__), "datasets", "sources"))
 # Each run gets its own timestamped subfolder here (e.g. .../20260915_150300/) so
@@ -74,18 +89,24 @@ DEFAULT_SOURCE_DIR = os.getenv("DOC_GEN_SOURCE_DIR", os.path.join(os.path.dirnam
 DEFAULT_OUTPUT_ROOT = os.getenv("DOC_GEN_OUTPUT_DIR", os.path.join(os.path.dirname(__file__), "datasets", "generated"))
 DEFAULT_UTTERANCES_FILE = os.path.join(os.path.dirname(__file__), "utterances.json")
 
-# Instance + credentials come from the environment -- nothing secret lives in
-# the repo. Set these before running:
-#   DOC_GEN_INSTANCE            e.g. "nwdemo"
-#   DOC_GEN_USERNAME             e.g. "otto.eval"
-#   DOC_GEN_PASSWORD             required -- no default
-#   DOC_GEN_DEPLOYMENT_DOC_ID   deployment doc id for the agent
-#   DOC_GEN_USERNAME_POOL       comma-separated accounts for --workers > 1
-INSTANCE = os.getenv("DOC_GEN_INSTANCE", "nwdemo")
-USERNAME = os.getenv("DOC_GEN_USERNAME", "otto.eval")
-PASSWORD = os.getenv("DOC_GEN_PASSWORD", "")
-DEPLOYMENT_DOC_ID = os.getenv("DOC_GEN_DEPLOYMENT_DOC_ID", "")
-VERIFY_SSL = os.getenv("DOC_GEN_VERIFY_SSL", "false").lower() == "true"
+# Instance + deployment doc id are not secret, so they're hardcoded as
+# defaults here (matches the shared nwdemo test instance everyone on this
+# project uses) -- override with DOC_GEN_INSTANCE/DOC_GEN_DEPLOYMENT_DOC_ID
+# env vars only if you need a different instance.
+#
+# PASSWORD is a real credential and is intentionally NOT hardcoded here --
+# it's picked up from DOC_GEN_PASSWORD (or the shared NW_PASSWORD) loaded
+# above from the gitignored .env.instance file, never committed to source.
+DEFAULT_INSTANCE = "nwdemo"
+DEFAULT_USERNAME = "otto.eval"
+DEFAULT_DEPLOYMENT_DOC_ID = "c86a62e2c7022010099a308dc7c26022"
+
+INSTANCE = os.getenv("DOC_GEN_INSTANCE") or os.getenv("INSTANCE_NAME", DEFAULT_INSTANCE)
+USERNAME = os.getenv("DOC_GEN_USERNAME") or os.getenv("NW_USERNAME", DEFAULT_USERNAME)
+PASSWORD = os.getenv("DOC_GEN_PASSWORD") or os.getenv("NW_PASSWORD", "")
+DEPLOYMENT_DOC_ID = os.getenv("DOC_GEN_DEPLOYMENT_DOC_ID") or os.getenv("DEPLOYMENT_DOC_ID", DEFAULT_DEPLOYMENT_DOC_ID)
+VERIFY_SSL = os.getenv("DOC_GEN_VERIFY_SSL") or os.getenv("VERIFY_SSL", "false")
+VERIFY_SSL = VERIFY_SSL.lower() == "true"
 
 
 # Pool of accounts for --workers > 1. The backend serializes conversation
