@@ -208,6 +208,10 @@ The turn sequence lives in `doc_gen/utterances.json` — by default: upload the 
 
 Config via env vars (export these in your shell before running, e.g. `export DOC_GEN_PASSWORD=...`): `DOC_GEN_INSTANCE`, `DOC_GEN_USERNAME`, `DOC_GEN_PASSWORD`, `DOC_GEN_DEPLOYMENT_DOC_ID`, `DOC_GEN_USERNAME_POOL` (comma-separated accounts used round-robin when `--workers > 1`, since the backend serializes conversation creation per account).
 
+Each run writes, into its output folder, alongside the generated document(s):
+- `_run.log` — full console transcript for that run (every `log()` line, timestamped)
+- `_timing.json` — per-turn `ttfb_ms` / `response_time_ms` / `elapsed_s`, plus per-file total `elapsed_s` and `ok` status, one entry per source file processed in that run
+
 ## Project layout
 
 ```
