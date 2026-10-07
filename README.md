@@ -212,6 +212,88 @@ Each run writes, into its output folder, alongside the generated document(s):
 - `_run.log` — full console transcript for that run (every `log()` line, timestamped)
 - `_timing.json` — per-turn `ttfb_ms` / `response_time_ms` / `elapsed_s`, plus per-file total `elapsed_s` and `ok` status, one entry per source file processed in that run
 
+## 3. Local eval: `local-eval/`
+
+Local-stack counterparts to the two runners above. Unlike `qna_eval` and `doc_gen`
+(remote instance via username/password), both of these talk directly to your
+**local docker stack** (`conversation-server` + `agent-orchestrator-v2` on
+`localhost:8040`/`8060`) using the same ChatKit SSE session protocol the browser
+UI uses. Use them to smoke-test a skill/AO change without touching a remote
+instance. Each is self-contained (own session capture, own JWT refresh), mirroring
+how `qna_eval/` and `doc_gen/` don't share code with each other either.
+
+### 3a. QnA: `local-eval/doc_qna/run_full_stack_eval.py`
+
+```bash
+cd local-eval/doc_qna
+python3 init_session.py                                      # one-time: capture a session
+python3 run_full_stack_eval.py --check-session                # confirm it's alive
+python3 run_full_stack_eval.py --category office --limit 1    # one case, quick sanity check
+python3 run_full_stack_eval.py --category office              # one full category
+python3 run_full_stack_eval.py --category office --case-id office-Smal-1  # one specific case
+python3 refresh_jwt.py --refresh-deploy-test                  # if calls fail with a bad/expired JWT
+```
+
+Each run writes a JSONL (one record per case: `test_query`, `final_answer`, `gold_standard`,
+`runs[]` with the sandbox bash-tool code/stdout/stderr) plus an `.xlsx`, and
+**auto-runs the judge** on that JSONL afterward — no separate step needed. Results land
+under `results/`; raw SSE dumps under `debug/`.
+
+Cases live in `cases.json` (ported from `cases-doc-qna.json`, paths rewritten to
+relative), each pointing at a file under `dataset/{office,pdf,combo,image,split}/`.
+`session.json` (git-ignored) holds your captured session — re-run `init_session.py`
+whenever it goes stale.
+
+### 3b. Document generation: `local-eval/doc_gen/run_doc_generation_local.py`
+
+Local-stack counterpart to `doc_gen/run_doc_generation.py` — same turn-sequence
+shape (`utterances.json`: extract key points, then generate a file), same per-run
+output convention (`_run.log`, `_timing.json`), but driven over ChatKit SSE instead
+of the remote `nextwave` client.
+
+```bash
+cd local-eval/doc_gen
+python3 init_session.py
+python3 run_doc_generation_local.py --check-session
+python3 run_doc_generation_local.py --limit 1                 # one source file
+python3 run_doc_generation_local.py --workers 4                # batch, concurrent
+python3 run_doc_generation_local.py --file datasets/sources/sample_housing_report.md
+python3 refresh_jwt.py --refresh-deploy-test
+```
+
+**Status: QnA text-only turns are confirmed working end-to-end (upload → answer →
+judge PASS). File-generation turns (the `generate_pdf` turn here, and any `doc_qna`
+case needing the planner) are currently blocked — not by this code, by a missing
+local credential:**
+
+```
+FileNotFoundError: [Errno 2] No such file or directory
+  ssl_config.py:194 in _build_ssl_context_gaic -> ctx.load_cert_chain(certfile=ssl_cert, keyfile=ssl_key)
+```
+
+`agent-orchestrator-v2/va_agentic/configs/mosaic_certs_lab/nextwavecs-mock.key.pem`
+(the GAIC/Mosaic mTLS client private key) does not exist on disk — only its
+`.chain.pem` counterpart does. This blocks every turn that routes through the
+`gaic`/`gpt_large` capability (the planner used for multi-step/file-generation
+work), even though plain single-skill Q&A turns succeed fine without it. This key
+is a credential, not something regenerable from this repo — get it from wherever
+your team's other local-stack secrets live, drop it in that same `mosaic_certs_lab/`
+folder, then re-run; the `extract_file_attachment()`/`download()` logic in
+`run_doc_generation_local.py` is written defensively (broad schema scan, clear
+failure logging) but **unverified against a real success payload** since every
+attempt so far failed upstream of ever returning a file — tighten it once you see
+one real success `.sse` dump.
+
+**Known gotcha (both):** `init_session.py` falls back to a hardcoded `instanceName`
+when the server's `/chat/session` response omits one. That fallback must match
+this stack's `GLIDE_TEST_INSTANCE` (currently `qnaaia1` in `conversation-server/.env`)
+— if they drift, every upload 500s with "Conversation not found" (the conversation
+gets created under one instanceId and looked up under another). If uploads start
+failing again, check
+`docker inspect conversation-server-conversation-server-app-1 --format '{{json .Config.Env}}'`
+for the current `GLIDE_TEST_INSTANCE` and update the fallback in both `init_session.py`
+copies to match.
+
 ## Project layout
 
 ```
@@ -227,5 +309,19 @@ sandbox-doc-processing-testing/
     datasets/
       sources/           # input files to batch-process
       generated/         # one timestamped folder per run: output file(s) + _run.log + _timing.json
+  local-eval/                # local-stack counterparts to qna_eval/ and doc_gen/ (ChatKit SSE, not remote)
+    doc_qna/                 # local counterpart to qna_eval/
+      run_full_stack_eval.py
+      init_session.py / refresh_jwt.py / trace_request.py
+      run_judge.py / run_judge_batch.py / prompts/judge_prompt.md
+      cases.json                               # 174 cases (office/pdf/combo/image/split)
+      dataset/{office,pdf,combo,image,split}/  # the 51 files those cases reference
+      results/ / debug/
+    doc_gen/                 # local counterpart to doc_gen/
+      run_doc_generation_local.py
+      init_session.py / refresh_jwt.py
+      utterances.json        # same turn-sequence shape as doc_gen/utterances-pdf.json
+      datasets/sources/ / datasets/generated/
+      debug/
   config/.env.example    # template for qna_eval/.env.instance
 ```

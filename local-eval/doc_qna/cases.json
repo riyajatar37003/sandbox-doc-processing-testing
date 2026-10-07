@@ -1,0 +1,2789 @@
+[
+  {
+    "id": "office-Smal-1",
+    "category": "office",
+    "sheet": "Small-Medium Files",
+    "file_name": "off_01_incident_report.docx",
+    "file_path": "dataset/office/off_01_incident_report.docx",
+    "file_exists": true,
+    "query_type": "Fact extraction",
+    "test_query": "How long did the incident last and by how much did it breach the SLA target?",
+    "expected_behaviour": "Read the duration metadata and compare to the SLA target stated.",
+    "gold_standard": "The incident lasted 2 hours 35 minutes. The P1 SLA target is 2 hours, so the breach margin is 35 minutes. The metadata row 'Duration' explicitly states: 2 hours 35 minutes (SLA target: 2 hours \u2014 BREACH by 35 min).",
+    "notes": "Must state 2h 35min, 2-hour target, and 35-minute breach precisely. '~3 hours' or 'slightly over' misses the exact values.",
+    "files": [
+      "dataset/office/off_01_incident_report.docx"
+    ]
+  },
+  {
+    "id": "office-Smal-2",
+    "category": "office",
+    "sheet": "Small-Medium Files",
+    "file_name": "off_01_incident_report.docx",
+    "file_path": "dataset/office/off_01_incident_report.docx",
+    "file_exists": true,
+    "query_type": "Root cause identification",
+    "test_query": "What was the technical root cause of the incident according to section 3?",
+    "expected_behaviour": "Read section 3.1 Technical Root Cause and summarise the logic defect.",
+    "gold_standard": "The root cause was a defect in the Jenkinsfile CI/CD pipeline approval gate. The gate evaluated the condition 'build.state != Cancelled' instead of 'build.state == Approved'. This meant any job that had not been explicitly cancelled would pass the gate, including unapproved jobs targeting production infrastructure. The Ansible Tower job AT-4421 passed this gate and applied DR BGP community filters to production APAC core routers.",
+    "notes": "Must identify the specific logic defect (state != Cancelled vs state == Approved) and the specific job (AT-4421). 'Ansible ran incorrectly' without the gate logic detail is insufficient.",
+    "files": [
+      "dataset/office/off_01_incident_report.docx"
+    ]
+  },
+  {
+    "id": "office-Smal-3",
+    "category": "office",
+    "sheet": "Small-Medium Files",
+    "file_name": "off_01_incident_report.docx",
+    "file_path": "dataset/office/off_01_incident_report.docx",
+    "file_exists": true,
+    "query_type": "Financial impact",
+    "test_query": "What was the total financial impact and which cost category was largest?",
+    "expected_behaviour": "Read the business impact table and identify the total and largest category.",
+    "gold_standard": "Total financial impact: USD 142,000. Largest category: SAP ERP \u2014 EDI Transactions at USD 94,000. This was caused by all APAC SAP application servers being unreachable during the outage, disrupting EDI interfaces to logistics partners for 2 hours 35 minutes.",
+    "notes": "Must state $142,000 total AND identify SAP ERP ($94,000) as the largest category. Stating the total without the category breakdown is insufficient.",
+    "files": [
+      "dataset/office/off_01_incident_report.docx"
+    ]
+  },
+  {
+    "id": "office-Smal-4",
+    "category": "office",
+    "sheet": "Small-Medium Files",
+    "file_name": "off_01_incident_report.docx",
+    "file_path": "dataset/office/off_01_incident_report.docx",
+    "file_exists": true,
+    "query_type": "Corrective actions",
+    "test_query": "How many corrective actions were raised and which two were already complete at time of writing?",
+    "expected_behaviour": "Count all rows in the corrective actions table and find those marked Complete.",
+    "gold_standard": "Seven corrective actions were raised (CA-01 through CA-07). Two were already marked Complete: CA-03 (separate DR and production Ansible inventory by environment prefix \u2014 owner Mike Torres) and CA-04 (add change classification for automated jobs touching Tier 1 network devices \u2014 owner: Change Manager).",
+    "notes": "Must state 7 as the total count and name BOTH CA-03 and CA-04 as the completed items.",
+    "files": [
+      "dataset/office/off_01_incident_report.docx"
+    ]
+  },
+  {
+    "id": "office-Smal-5",
+    "category": "office",
+    "sheet": "Small-Medium Files",
+    "file_name": "off_02_sla_metrics_dashboard.xlsx",
+    "file_path": "dataset/office/off_02_sla_metrics_dashboard.xlsx",
+    "file_exists": true,
+    "query_type": "KPI reading",
+    "test_query": "Which SLA metrics show BREACH status in the KPI Summary sheet?",
+    "expected_behaviour": "Read the Status column for each KPI row in the KPI Summary sheet.",
+    "gold_standard": "Six metrics show BREACH status: P1 Resolution SLA %\r\nP2 Resolution SLA %\r\nService Availability %\r\nP1 MTTR (hours)\r\nChange Success Rate %\r\nFirst-Call Resolution %",
+    "notes": "Must identify all four BREACH metrics with their actual and target values. Missing any one metric fails.",
+    "files": [
+      "dataset/office/off_02_sla_metrics_dashboard.xlsx"
+    ]
+  },
+  {
+    "id": "office-Smal-6",
+    "category": "office",
+    "sheet": "Small-Medium Files",
+    "file_name": "off_02_sla_metrics_dashboard.xlsx",
+    "file_path": "dataset/office/off_02_sla_metrics_dashboard.xlsx",
+    "file_exists": true,
+    "query_type": "Multi-sheet comparison",
+    "test_query": "In the Incident Volume sheet, which month in FY2024 had the highest total incident count?",
+    "expected_behaviour": "Find the Total column in the Incident Volume sheet and identify the maximum value.",
+    "gold_standard": "September 2024 had the highest total incident count at 284 (5 P1, 23 P2, and higher P3/P4 counts). The P1 SLA for September was also the worst at 93%, matching the highest P1 volume of 5 incidents.",
+    "notes": "Must name September 2024 specifically with the total of 284. 'Q3 was busy' without naming the month and total fails.",
+    "files": [
+      "dataset/office/off_02_sla_metrics_dashboard.xlsx"
+    ]
+  },
+  {
+    "id": "office-Smal-7",
+    "category": "office",
+    "sheet": "Small-Medium Files",
+    "file_name": "off_02_sla_metrics_dashboard.xlsx",
+    "file_path": "dataset/office/off_02_sla_metrics_dashboard.xlsx",
+    "file_exists": true,
+    "query_type": "Vendor data lookup",
+    "test_query": "In the Vendor SLA sheet, which vendor has the lowest Q1 score and how many SLA breaches did they have?",
+    "expected_behaviour": "Find the minimum value in the Q1 Score column and read the Breach Count for that row.",
+    "gold_standard": "SwiftOps Ltd. has the lowest Q1 score at 71/100 with 1 SLA breach. Note: DataVault Inc. has a score of 76/100 but 2 breaches, making it higher risk despite the better score.",
+    "notes": "Must name SwiftOps Ltd. with score 71/100 and 1 breach. Must also note DataVault has the most breaches (2) despite a higher score.",
+    "files": [
+      "dataset/office/off_02_sla_metrics_dashboard.xlsx"
+    ]
+  },
+  {
+    "id": "office-Smal-8",
+    "category": "office",
+    "sheet": "Small-Medium Files",
+    "file_name": "off_03_security_incident_brief.pptx",
+    "file_path": "dataset/office/off_03_security_incident_brief.pptx",
+    "file_exists": true,
+    "query_type": "Slide content extraction",
+    "test_query": "According to the Impact Breakdown slide, what is the total cost and which category has the highest individual cost?",
+    "expected_behaviour": "Read the table on the Impact Breakdown slide and find the TOTAL row and the maximum individual cost.",
+    "gold_standard": "Total cost: $142,000 (TOTAL row at the bottom). Highest individual category: SAP ERP \u2014 EDI at $94,000, caused by APAC SAP application servers being unreachable during the 2h 35min outage.",
+    "notes": "Must state $142,000 as total and $94,000 for SAP ERP-EDI as the largest category.",
+    "files": [
+      "dataset/office/off_03_security_incident_brief.pptx"
+    ]
+  },
+  {
+    "id": "office-Smal-9",
+    "category": "office",
+    "sheet": "Small-Medium Files",
+    "file_name": "off_03_security_incident_brief.pptx",
+    "file_path": "dataset/office/off_03_security_incident_brief.pptx",
+    "file_exists": true,
+    "query_type": "Root cause slide",
+    "test_query": "What was the specific code logic error in the CI/CD pipeline according to the root cause slide?",
+    "expected_behaviour": "Read the Root Cause Analysis slide and find the specific gate logic comparison.",
+    "gold_standard": "The gate evaluated: state != 'Cancelled' (WRONG). It should evaluate: state == 'Approved' (CORRECT). This means any job that had not been explicitly cancelled \u2014 regardless of approval status \u2014 would pass the gate and execute.",
+    "notes": "Must quote both the wrong condition (state != Cancelled) and the correct one (state == Approved). Generic 'pipeline bug' description fails.",
+    "files": [
+      "dataset/office/off_03_security_incident_brief.pptx"
+    ]
+  },
+  {
+    "id": "office-Smal-10",
+    "category": "office",
+    "sheet": "Small-Medium Files",
+    "file_name": "off_03_security_incident_brief.pptx",
+    "file_path": "dataset/office/off_03_security_incident_brief.pptx",
+    "file_exists": true,
+    "query_type": "Q1 SLA table",
+    "test_query": "According to the SLA Performance slide, which is the only metric that MET its target in Q1 2025?",
+    "expected_behaviour": "Find the Status column in the SLA Performance table and identify the MET row.",
+    "gold_standard": "P3 Resolution is the only metric that MET its target in Q1 2025 \u2014 actual 94.3% vs 90.0% target. All four other metrics show BREACH: P1 (84.2% vs 99.0%), P2 (91.7% vs 95.0%), Availability (99.71% vs 99.9%), and Change Success (96.4% vs 98.0%).",
+    "notes": "Must name P3 Resolution with both values (94.3% actual, 90.0% target) and confirm all others are BREACH.",
+    "files": [
+      "dataset/office/off_03_security_incident_brief.pptx"
+    ]
+  },
+  {
+    "id": "office-Smal-11",
+    "category": "office",
+    "sheet": "Small-Medium Files",
+    "file_name": "off_04_cmdb_audit_export.csv",
+    "file_path": "dataset/office/off_04_cmdb_audit_export.csv",
+    "file_exists": true,
+    "query_type": "Row count verification",
+    "test_query": "How many rows of data are in this CSV file (excluding the header row)?",
+    "expected_behaviour": "Count the data rows in the CSV file.",
+    "gold_standard": "The CSV contains 3,000 data rows (excluding the header row). The file includes 24 columns covering CI_SysID through Risk_Level. Each row represents one configuration item from the ServiceNow CMDB export.",
+    "notes": "Must state exactly 3,000 data rows. 'Large number' or approximate count fails.",
+    "files": [
+      "dataset/office/off_04_cmdb_audit_export.csv"
+    ]
+  },
+  {
+    "id": "office-Smal-12",
+    "category": "office",
+    "sheet": "Small-Medium Files",
+    "file_name": "off_04_cmdb_audit_export.csv",
+    "file_path": "dataset/office/off_04_cmdb_audit_export.csv",
+    "file_exists": true,
+    "query_type": "Header identification",
+    "test_query": "What are the first five column headers in this CSV file?",
+    "expected_behaviour": "Read the header row (row 1) and list the first five column names.",
+    "gold_standard": "The first five column headers are: CI_SysID, CI_Class, CI_Name, Status, Environment.",
+    "notes": "Must name the first five headers exactly in order: CI_SysID, CI_Class, CI_Name, Status, Environment.",
+    "files": [
+      "dataset/office/off_04_cmdb_audit_export.csv"
+    ]
+  },
+  {
+    "id": "office-Smal-13",
+    "category": "office",
+    "sheet": "Small-Medium Files",
+    "file_name": "off_04_cmdb_audit_export.csv",
+    "file_path": "dataset/office/off_04_cmdb_audit_export.csv",
+    "file_exists": true,
+    "query_type": "Stale flag analysis",
+    "test_query": "What does the Stale_Flag column indicate and what are its possible values?",
+    "expected_behaviour": "Read the Stale_Flag column header and sample values to understand its meaning.",
+    "gold_standard": "The Stale_Flag column indicates whether a CI record is stale \u2014 i.e., has not been updated via automated discovery in more than 90 days. Possible values are 'Yes' (stale) and 'No' (not stale). Stale CIs require manual review as their accuracy cannot be verified.",
+    "notes": "Must explain the 90-day threshold and both possible values (Yes/No). 'Up to date or not' without the 90-day context is insufficient.",
+    "files": [
+      "dataset/office/off_04_cmdb_audit_export.csv"
+    ]
+  },
+  {
+    "id": "office-Smal-14",
+    "category": "office",
+    "sheet": "Small-Medium Files",
+    "file_name": "off_04_cmdb_audit_export.csv",
+    "file_path": "dataset/office/off_04_cmdb_audit_export.csv",
+    "file_exists": true,
+    "query_type": "Risk level distribution",
+    "test_query": "What are the possible Risk_Level values in this CMDB export?",
+    "expected_behaviour": "Sample the Risk_Level column to identify all distinct values used.",
+    "gold_standard": "The Risk_Level column contains six possible values: Low, Medium, High, Critical, and potentially others based on the generation. The most common values are Low and Medium, with High and Critical used for production-tier systems.",
+    "notes": "Must identify at least 4 of the 6 risk levels used. 'Low, medium, and high' without Critical is incomplete.",
+    "files": [
+      "dataset/office/off_04_cmdb_audit_export.csv"
+    ]
+  },
+  {
+    "id": "office-Smal-15",
+    "category": "office",
+    "sheet": "Small-Medium Files",
+    "file_name": "off_05_change_request_rfc0005678.docx",
+    "file_path": "dataset/office/off_05_change_request_rfc0005678.docx",
+    "file_exists": true,
+    "query_type": "Change metadata",
+    "test_query": "What type of change is RFC0005678 and when is the implementation window?",
+    "expected_behaviour": "Read the metadata fields at the top of the change request document.",
+    "gold_standard": "RFC0005678 is a Normal-High change. The implementation window is 2025-01-25 02:00\u201305:00 UTC (Saturday). The change is currently in status 'CAB Approved \u2014 Pending Implementation' having received 4 of 5 votes with 1 abstention (conflict of interest).",
+    "notes": "Must state Normal-High type, the specific date and time window (2025-01-25 02:00-05:00 UTC), and the 4-of-5 CAB vote result.",
+    "files": [
+      "dataset/office/off_05_change_request_rfc0005678.docx"
+    ]
+  },
+  {
+    "id": "office-Smal-16",
+    "category": "office",
+    "sheet": "Small-Medium Files",
+    "file_name": "off_05_change_request_rfc0005678.docx",
+    "file_path": "dataset/office/off_05_change_request_rfc0005678.docx",
+    "file_exists": true,
+    "query_type": "Risk identification",
+    "test_query": "How many risks are identified in the risk assessment and which has the highest score?",
+    "expected_behaviour": "Count rows in the risk assessment table and find the maximum score.",
+    "gold_standard": "Four risks are identified. The highest-scoring risk is 'Approval gate logic error in new code' with a score of 8 out of 25. The mitigation is: peer code review with 2 reviewers minimum and automated unit tests before merge.",
+    "notes": "Must count 4 risks specifically and name the highest-scored risk (score 8) with its mitigation.",
+    "files": [
+      "dataset/office/off_05_change_request_rfc0005678.docx"
+    ]
+  },
+  {
+    "id": "office-Smal-17",
+    "category": "office",
+    "sheet": "Small-Medium Files",
+    "file_name": "off_05_change_request_rfc0005678.docx",
+    "file_path": "dataset/office/off_05_change_request_rfc0005678.docx",
+    "file_exists": true,
+    "query_type": "Verification steps",
+    "test_query": "How many post-implementation verification steps are defined and what is the first one?",
+    "expected_behaviour": "Count rows in the post-implementation verification table and read the first check.",
+    "gold_standard": "Five post-implementation verification steps are defined. Step 1: Submit a test job with state=Pending_Approval \u2014 the expected result is that the job should be BLOCKED (gate rejects it). This confirms the new approval gate logic is working correctly as a negative test.",
+    "notes": "Must count 5 steps and describe step 1 (submit job with state=Pending_Approval expecting BLOCKED result).",
+    "files": [
+      "dataset/office/off_05_change_request_rfc0005678.docx"
+    ]
+  },
+  {
+    "id": "office-Larg-18",
+    "category": "office",
+    "sheet": "Large Files",
+    "file_name": "off_06_capacity_planning.xlsx",
+    "file_path": "dataset/office/off_06_capacity_planning.xlsx",
+    "file_exists": true,
+    "query_type": "CRITICAL items",
+    "test_query": "Which two systems are rated CRITICAL in the Capacity Summary sheet and what are their decision deadlines?",
+    "expected_behaviour": "Find CRITICAL rows and read the Decision Date column.",
+    "gold_standard": "Two systems are CRITICAL: (1) GPU-Farm-01 A100 \u2014 98.1% peak \u2014 add 4x p3.8xl reserved instances \u2014 decision deadline 2025-01-24. (2) PROD-VMware-02 APAC \u2014 94.7% CPU \u2014 order 2x HPE BL460c blades \u2014 decision deadline 2025-01-31. The GPU-Farm-01 deadline is earlier of the two.",
+    "notes": "Must name both systems with both deadlines. GPU-Farm-01 deadline (Jan 24) is earlier than VMware-02 (Jan 31) \u2014 both must be stated.",
+    "files": [
+      "dataset/office/off_06_capacity_planning.xlsx"
+    ]
+  },
+  {
+    "id": "office-Larg-19",
+    "category": "office",
+    "sheet": "Large Files",
+    "file_name": "off_06_capacity_planning.xlsx",
+    "file_path": "dataset/office/off_06_capacity_planning.xlsx",
+    "file_exists": true,
+    "query_type": "Sheet count",
+    "test_query": "How many sheets does this workbook contain and what are their names?",
+    "expected_behaviour": "List all sheet tabs in the workbook.",
+    "gold_standard": "The workbook contains 3 sheets: Capacity Summary (infrastructure risk assessment), Daily Metrics Log (70,000 rows of hourly system utilisation data), and Investment Summary (FY2025 investment plan with costs).",
+    "notes": "Must state 3 sheets and name all three correctly.",
+    "files": [
+      "dataset/office/off_06_capacity_planning.xlsx"
+    ]
+  },
+  {
+    "id": "office-Larg-20",
+    "category": "office",
+    "sheet": "Large Files",
+    "file_name": "off_06_capacity_planning.xlsx",
+    "file_path": "dataset/office/off_06_capacity_planning.xlsx",
+    "file_exists": true,
+    "query_type": "Investment total",
+    "test_query": "What is the total FY2025 capital expenditure required according to the Investment Summary sheet?",
+    "expected_behaviour": "Sum the FY2025 Capex column in the Investment Summary sheet.",
+    "gold_standard": "Total FY2025 capital expenditure: $394,000 (GPUFarm $0 opex only, VMware APAC $84,000, SAN Primary $310,000). Total annual opex impact: $288,400/yr. The largest individual capex item is the SAN Primary expansion at $310,000.",
+    "notes": "Must state $394,000 capex (or sum correctly) with SAN Primary $310,000 as the largest. Also note the opex component.",
+    "files": [
+      "dataset/office/off_06_capacity_planning.xlsx"
+    ]
+  },
+  {
+    "id": "office-Larg-21",
+    "category": "office",
+    "sheet": "Large Files",
+    "file_name": "off_06_capacity_planning.xlsx",
+    "file_path": "dataset/office/off_06_capacity_planning.xlsx",
+    "file_exists": true,
+    "query_type": "Data volume",
+    "test_query": "How many rows of data are in the Daily Metrics Log sheet?",
+    "expected_behaviour": "Count or estimate the data rows in the Daily Metrics Log sheet.",
+    "gold_standard": "The Daily Metrics Log sheet contains 70,000 data rows (plus 1 header row). Each row represents one hourly reading for one of 10 monitored systems, covering approximately 7,000 hours of system history (about 9.5 months from January 2024 onward).",
+    "notes": "Must state 70,000 rows specifically. 'Many thousands' without the exact count fails.",
+    "files": [
+      "dataset/office/off_06_capacity_planning.xlsx"
+    ]
+  },
+  {
+    "id": "office-Larg-22",
+    "category": "office",
+    "sheet": "Large Files",
+    "file_name": "off_07_it_qbr_q1_2025.pptx",
+    "file_path": "dataset/office/off_07_it_qbr_q1_2025.pptx",
+    "file_exists": true,
+    "query_type": "Opening slide",
+    "test_query": "Who presented the QBR and what date was it?",
+    "expected_behaviour": "Read the title slide of the QBR presentation.",
+    "gold_standard": "The QBR was presented by James Wu (CTO) on 02 April 2025. The subtitle also lists David Kim (CISO) and Angela Brooks (IT Director) as co-presenters. The audience is IT Leadership and Board Distribution.",
+    "notes": "Must name James Wu and the April 2, 2025 date. Must also mention the Board Distribution audience.",
+    "files": [
+      "dataset/office/off_07_it_qbr_q1_2025.pptx"
+    ]
+  },
+  {
+    "id": "office-Larg-23",
+    "category": "office",
+    "sheet": "Large Files",
+    "file_name": "off_07_it_qbr_q1_2025.pptx",
+    "file_path": "dataset/office/off_07_it_qbr_q1_2025.pptx",
+    "file_exists": true,
+    "query_type": "Executive summary",
+    "test_query": "According to the executive summary slide, which specific metric is urgently needed by January 24?",
+    "expected_behaviour": "Find the executive summary slide and read the urgent investment bullet.",
+    "gold_standard": "The GPU cluster (GPU-Farm-01 A100) is at 98.1% peak utilisation \u2014 a $220K investment decision is required by January 24, 2025. If not resolved, the ML training job ML-TRAIN-0047 scheduled for February will evict inference pods causing production AI service disruptions.",
+    "notes": "Must name GPU-Farm-01, the 98.1% utilisation, the $220K figure, and the January 24 deadline specifically.",
+    "files": [
+      "dataset/office/off_07_it_qbr_q1_2025.pptx"
+    ]
+  },
+  {
+    "id": "office-Larg-24",
+    "category": "office",
+    "sheet": "Large Files",
+    "file_name": "off_07_it_qbr_q1_2025.pptx",
+    "file_path": "dataset/office/off_07_it_qbr_q1_2025.pptx",
+    "file_exists": true,
+    "query_type": "Chart content",
+    "test_query": "What do the bar charts embedded in the presentation show?",
+    "expected_behaviour": "Describe the chart slides embedded in the presentation.",
+    "gold_standard": "The embedded bar charts show SLA compliance by priority (P1 through Change Success) for each month of Q1 2025, incident counts by month, vendor performance scores, IT budget utilisation by category, CMDB health metrics, and patch compliance by platform. Each chart uses colour coding \u2014 green for compliant, amber for at-risk, red for breach/critical.",
+    "notes": "Must describe at least 3 specific chart types (SLA compliance, incident counts, vendor scores, etc.) and mention the colour-coding convention.",
+    "files": [
+      "dataset/office/off_07_it_qbr_q1_2025.pptx"
+    ]
+  },
+  {
+    "id": "office-Larg-25",
+    "category": "office",
+    "sheet": "Large Files",
+    "file_name": "off_07_it_qbr_q1_2025.pptx",
+    "file_path": "dataset/office/off_07_it_qbr_q1_2025.pptx",
+    "file_exists": true,
+    "query_type": "Final decisions table",
+    "test_query": "What are the five priority actions listed in the final decisions slide?",
+    "expected_behaviour": "Read the Q2 2025 Priorities table slide at the end of the presentation.",
+    "gold_standard": "The five priority decisions are: (CRITICAL) GPU Farm p3.8xl reservation \u2014 $220K/yr \u2014 James Wu \u2014 Jan 24; (CRITICAL) VMware APAC blade order \u2014 $84K capex \u2014 Angela Brooks \u2014 Jan 31; (HIGH) SAN Primary expansion \u2014 $310K capex \u2014 Mike Torres \u2014 Mar 15; (HIGH) Azure Blob backup overflow \u2014 $43K/yr \u2014 Ravi Patel \u2014 Feb 28; (HIGH) MFA for 14 admin accounts \u2014 David Kim \u2014 Apr 30.",
+    "notes": "Must list all 5 items with their owner names and deadlines. Missing any item or owner fails.",
+    "files": [
+      "dataset/office/off_07_it_qbr_q1_2025.pptx"
+    ]
+  },
+  {
+    "id": "office-Larg-26",
+    "category": "office",
+    "sheet": "Large Files",
+    "file_name": "off_08_disaster_recovery_plan.docx",
+    "file_path": "dataset/office/off_08_disaster_recovery_plan.docx",
+    "file_exists": true,
+    "query_type": "Recovery objectives",
+    "test_query": "What is the RTO for Tier 0 services and which services are classified as Tier 0?",
+    "expected_behaviour": "Read the Recovery Objectives table in section 1.",
+    "gold_standard": "Tier 0 has a 15-minute RTO (Recovery Time Objective) with a 5-minute RPO. Tier 0 services are: ServiceNow, Identity, DNS. These use a hot standby active-active model and the last DR test result was PASS.",
+    "notes": "Must state 15-minute RTO and 5-minute RPO for Tier 0, and name all four services (ServiceNow, Identity/AD+Okta, DNS, Core Network).",
+    "files": [
+      "dataset/office/off_08_disaster_recovery_plan.docx"
+    ]
+  },
+  {
+    "id": "office-Larg-27",
+    "category": "office",
+    "sheet": "Large Files",
+    "file_name": "off_08_disaster_recovery_plan.docx",
+    "file_path": "dataset/office/off_08_disaster_recovery_plan.docx",
+    "file_exists": true,
+    "query_type": "SAP test failure",
+    "test_query": "Why did the SAP ERP recovery fail its RTO in the November 2024 DR test?",
+    "expected_behaviour": "Find the SAP ERP row in the Recovery Objectives table \u2014 check the Last Test column.",
+    "gold_standard": "SAP ERP achieved a PARTIAL PASS in the November 2024 DR test because it exceeded the 1-hour RTO by 22 minutes. The cause was Oracle Data Guard log synchronisation lag \u2014 the redo log application on the standby database fell behind, causing the failover sequence to stall waiting for log catch-up. The issue was tuned post-test.",
+    "notes": "Must state exactly 22 minutes over RTO and identify Oracle Data Guard log sync lag as the specific cause.",
+    "files": [
+      "dataset/office/off_08_disaster_recovery_plan.docx"
+    ]
+  },
+  {
+    "id": "office-Larg-28",
+    "category": "office",
+    "sheet": "Large Files",
+    "file_name": "off_08_disaster_recovery_plan.docx",
+    "file_path": "dataset/office/off_08_disaster_recovery_plan.docx",
+    "file_exists": true,
+    "query_type": "Appendix count",
+    "test_query": "How many appendices does the DR plan contain?",
+    "expected_behaviour": "Count the appendix headings in the document.",
+    "gold_standard": "The DR plan contains 80 appendices (Appendix 1 through Appendix 80), each covering a DR test from a different month spanning approximately 2022\u20132028. Each appendix includes a results table for the five Tier 0 and Tier 1 services, and approximately every third appendix includes an embedded bar chart showing recovery times visually.",
+    "notes": "Must state 80 appendices. 'Many appendices' without the count fails.",
+    "files": [
+      "dataset/office/off_08_disaster_recovery_plan.docx"
+    ]
+  },
+  {
+    "id": "office-Larg-29",
+    "category": "office",
+    "sheet": "Large Files",
+    "file_name": "off_08_disaster_recovery_plan.docx",
+    "file_path": "dataset/office/off_08_disaster_recovery_plan.docx",
+    "file_exists": true,
+    "query_type": "Activation criteria",
+    "test_query": "Under what five conditions can the DRP be activated?",
+    "expected_behaviour": "Read section 2 Activation Criteria and list all five conditions.",
+    "gold_standard": "The five activation conditions are: (1) Primary DC unavailable with outage projected > 2 hours; (2) Ransomware confirmed active on > 20% of production systems; (3) Unrecoverable data loss on any Tier 0 or Tier 1 system; (4) Cloud provider outage sustained > 4 hours affecting multi-AZ deployments; (5) Physical security breach confirming infrastructure integrity compromise.",
+    "notes": "Must list all five conditions with their specific thresholds. Missing any one condition fails.",
+    "files": [
+      "dataset/office/off_08_disaster_recovery_plan.docx"
+    ]
+  },
+  {
+    "id": "office-Larg-30",
+    "category": "office",
+    "sheet": "Large Files",
+    "file_name": "off_09_asset_inventory.xlsx",
+    "file_path": "dataset/office/off_09_asset_inventory.xlsx",
+    "file_exists": true,
+    "query_type": "Row count",
+    "test_query": "How many asset records are in the Asset Master sheet?",
+    "expected_behaviour": "Count data rows in the Asset Master sheet (excluding header).",
+    "gold_standard": "The Asset Master sheet contains 50,000 asset records (excluding the header row). Each record has 24 columns covering Asset_Tag through Notes, representing the complete IT asset inventory across all data centres, environments, and departments.",
+    "notes": "Must state exactly 50,000 rows. Any approximate or different number fails.",
+    "files": [
+      "dataset/office/off_09_asset_inventory.xlsx"
+    ]
+  },
+  {
+    "id": "office-Larg-31",
+    "category": "office",
+    "sheet": "Large Files",
+    "file_name": "off_09_asset_inventory.xlsx",
+    "file_path": "dataset/office/off_09_asset_inventory.xlsx",
+    "file_exists": true,
+    "query_type": "Column identification",
+    "test_query": "What are the first six column headers in the Asset Master sheet?",
+    "expected_behaviour": "Read the first row of the Asset Master sheet.",
+    "gold_standard": "The first six column headers are: Asset_Tag, Asset_Class, Asset_Name, Make, Model, Serial (short for Serial_Number). These form the basic identification fields for each asset.",
+    "notes": "Must name the first six headers in order: Asset_Tag, Asset_Class, Asset_Name, Make, Model, Serial.",
+    "files": [
+      "dataset/office/off_09_asset_inventory.xlsx"
+    ]
+  },
+  {
+    "id": "office-Larg-32",
+    "category": "office",
+    "sheet": "Large Files",
+    "file_name": "off_09_asset_inventory.xlsx",
+    "file_path": "dataset/office/off_09_asset_inventory.xlsx",
+    "file_exists": true,
+    "query_type": "Asset class diversity",
+    "test_query": "What asset classes are represented in this inventory?",
+    "expected_behaviour": "Sample the Asset_Class column to identify all distinct values.",
+    "gold_standard": "The inventory covers six asset classes: Server, Network, Endpoint, Storage, Virtual, and Cloud. The Summary sheet shows the count and total cost for each class.",
+    "notes": "Must name all six asset classes: Server, Network, Endpoint, Storage, Virtual, Cloud.",
+    "files": [
+      "dataset/office/off_09_asset_inventory.xlsx"
+    ]
+  },
+  {
+    "id": "office-Larg-33",
+    "category": "office",
+    "sheet": "Large Files",
+    "file_name": "off_10_annual_security_review.pptx",
+    "file_path": "dataset/office/off_10_annual_security_review.pptx",
+    "file_exists": true,
+    "query_type": "Presenter",
+    "test_query": "Who presented the Annual Security Review and to which audience?",
+    "expected_behaviour": "Read the title slide of the security review presentation.",
+    "gold_standard": "The Annual Security Review for 2024 was presented by David Kim (CISO) on 20 January 2025. The audience is the Board of Directors and IT Leadership. The document is classified as Restricted.",
+    "notes": "Must name David Kim as CISO, January 20 2025 as the date, and Board of Directors as the audience.",
+    "files": [
+      "dataset/office/off_10_annual_security_review.pptx"
+    ]
+  },
+  {
+    "id": "office-Larg-34",
+    "category": "office",
+    "sheet": "Large Files",
+    "file_name": "off_10_annual_security_review.pptx",
+    "file_path": "dataset/office/off_10_annual_security_review.pptx",
+    "file_exists": true,
+    "query_type": "Compliance score",
+    "test_query": "What was the overall ISO 27001 compliance score and which domain scored lowest?",
+    "expected_behaviour": "Find the ISO 27001 compliance table slide and read the overall score and minimum domain score.",
+    "gold_standard": "Overall ISO 27001 compliance: 84.0% (100 of 119 controls passed, 12 failures, 7 exceptions). Lowest scoring domain: A.15 Supplier Relationships at 71.4% (5 of 7 controls passed, 1 failure, 1 exception). The key finding was that DataVault Inc.'s annual security review was not completed in 2024.",
+    "notes": "Must state 84.0% overall, 100/119 controls, and identify A.15 Supplier Relationships at 71.4% as the lowest domain with the DataVault finding.",
+    "files": [
+      "dataset/office/off_10_annual_security_review.pptx"
+    ]
+  },
+  {
+    "id": "office-Larg-35",
+    "category": "office",
+    "sheet": "Large Files",
+    "file_name": "off_10_annual_security_review.pptx",
+    "file_path": "dataset/office/off_10_annual_security_review.pptx",
+    "file_exists": true,
+    "query_type": "Chart subjects",
+    "test_query": "What security metric trends are shown in the embedded chart slides?",
+    "expected_behaviour": "Describe the types of charts embedded throughout the presentation.",
+    "gold_standard": "The embedded charts show: (1) vulnerability count by severity (Critical/High/Medium/Low) across 2024 months; (2) patch compliance by platform showing BREACH status for WS2019 and ESXi 8.0; (3) security incident volume by severity class; (4) ISO 27001 domain compliance bars; (5) MFA enrollment rate by user category; (6) vulnerability remediation SLA trend lines. Each chart uses red/amber/green colour coding consistent with the risk framework.",
+    "notes": "Must name at least 4 specific chart types. Generic 'security metrics' description without specifics fails.",
+    "files": [
+      "dataset/office/off_10_annual_security_review.pptx"
+    ]
+  },
+  {
+    "id": "office-Larg-36",
+    "category": "office",
+    "sheet": "Large Files",
+    "file_name": "off_10_annual_security_review.pptx",
+    "file_path": "dataset/office/off_10_annual_security_review.pptx",
+    "file_exists": true,
+    "query_type": "2025 roadmap",
+    "test_query": "What is the Q1 2025 deadline for MFA enforcement on admin accounts?",
+    "expected_behaviour": "Find the 2025 Security Roadmap slide and read the MFA deadline.",
+    "gold_standard": "The deadline for MFA enforcement on all admin accounts is April 30, 2025. This applies to the 14 admin accounts currently without MFA \u2014 referenced as open finding CF-2024-001 (High severity). This is a CISO mandate (non-negotiable). The roadmap slide categorises this as a Q1 2025 Foundation priority.",
+    "notes": "Must state April 30, 2025 as the deadline, 14 accounts as the scope, and CISO mandate as the authority. 'Soon' without the specific date fails.",
+    "files": [
+      "dataset/office/off_10_annual_security_review.pptx"
+    ]
+  },
+  {
+    "id": "office-Larg-37",
+    "category": "office",
+    "sheet": "Large Files",
+    "file_name": "off_11_it_outsourcing_strategy.docx",
+    "file_path": "dataset/office/off_11_it_outsourcing_strategy.docx",
+    "file_exists": true,
+    "query_type": "Total spend",
+    "test_query": "What is the total annual IT outsourcing spend across all providers listed in the scorecard?",
+    "expected_behaviour": "Sum the Annual Spend column in the provider scorecard table.",
+    "gold_standard": "Total annual IT outsourcing spend: USD $3,454,000. across the 8 providers listed in section 2. The largest single provider is Wipro Infrastructure MSP at $1,200,000/yr (35.8% of total). The second largest is Cognizant at $780,000.",
+    "notes": "Must state $3,355,000 as the total (or correctly summed) and identify Wipro at $1.2M as the largest. Approximating fails.",
+    "files": [
+      "dataset/office/off_11_it_outsourcing_strategy.docx"
+    ]
+  },
+  {
+    "id": "office-Larg-38",
+    "category": "office",
+    "sheet": "Large Files",
+    "file_name": "off_11_it_outsourcing_strategy.docx",
+    "file_path": "dataset/office/off_11_it_outsourcing_strategy.docx",
+    "file_exists": true,
+    "query_type": "Exit recommendation",
+    "test_query": "Which vendor is recommended for contract non-renewal and why?",
+    "expected_behaviour": "Find the EXIT or DO NOT RENEW recommendation in the scorecard.",
+    "gold_standard": "Rackspace Legacy Hosting is recommended for non-renewal at its July 2025 contract expiry. The specific reason: three infrastructure incidents in Q4 2024 were attributed to Rackspace \u2014 including a patching delay on CVE-2024-38112, a firewall misconfiguration that exposed a legacy app to the internet for 4 hours, and an unplanned 2-hour maintenance outage without advance notice. Annual saving from non-renewal: $240,000.",
+    "notes": "Must name Rackspace, the July 2025 date, the $240K saving, and describe at least 2 of the 3 specific incidents.",
+    "files": [
+      "dataset/office/off_11_it_outsourcing_strategy.docx"
+    ]
+  },
+  {
+    "id": "office-Larg-39",
+    "category": "office",
+    "sheet": "Large Files",
+    "file_name": "off_11_it_outsourcing_strategy.docx",
+    "file_path": "dataset/office/off_11_it_outsourcing_strategy.docx",
+    "file_exists": true,
+    "query_type": "Cognizant terms",
+    "test_query": "What are the specific contract terms recommended for Cognizant?",
+    "expected_behaviour": "Read the Cognizant row recommendation in the scorecard table.",
+    "gold_standard": "Cognizant is recommended for a 2-year extension with a 5% rate reduction in return for the extended commitment, plus addition of cloud migration support for Waves 2 and 3 as a statement of work amendment. Cognizant scored 85/100 with 0 breaches and an improving \u2191+2pp trend.",
+    "notes": "Must state all three terms: 2-year extension, 5% rate reduction, and cloud migration scope addition (Waves 2 and 3).",
+    "files": [
+      "dataset/office/off_11_it_outsourcing_strategy.docx"
+    ]
+  },
+  {
+    "id": "office-Larg-40",
+    "category": "office",
+    "sheet": "Large Files",
+    "file_name": "off_11_it_outsourcing_strategy.docx",
+    "file_path": "dataset/office/off_11_it_outsourcing_strategy.docx",
+    "file_exists": true,
+    "query_type": "Appendix count",
+    "test_query": "How many appendices are in this document?",
+    "expected_behaviour": "Count the appendix headings.",
+    "gold_standard": "The document contains 45 appendices (Appendix 1 through Appendix 45). Each appendix covers a specific provider's monthly SLA data for a given month and year, including a data table of 12 monthly rows and an embedded line chart showing the SLA compliance trend for that provider.",
+    "notes": "Must state 45 appendices specifically.",
+    "files": [
+      "dataset/office/off_11_it_outsourcing_strategy.docx"
+    ]
+  },
+  {
+    "id": "office-Larg-41",
+    "category": "office",
+    "sheet": "Large Files",
+    "file_name": "off_12_vendor_performance_data.xlsx",
+    "file_path": "dataset/office/off_12_vendor_performance_data.xlsx",
+    "file_exists": true,
+    "query_type": "Sheet names",
+    "test_query": "What sheets does this workbook contain?",
+    "expected_behaviour": "List all sheet tabs in the workbook.",
+    "gold_standard": "The workbook contains 2 sheets: Ticket Log (30,000 rows of individual support tickets across all vendors) and Monthly KPI Summary (aggregated monthly performance KPIs per vendor).",
+    "notes": "Must name both sheets: Ticket Log and Monthly KPI Summary.",
+    "files": [
+      "dataset/office/off_12_vendor_performance_data.xlsx"
+    ]
+  },
+  {
+    "id": "office-Larg-42",
+    "category": "office",
+    "sheet": "Large Files",
+    "file_name": "off_12_vendor_performance_data.xlsx",
+    "file_path": "dataset/office/off_12_vendor_performance_data.xlsx",
+    "file_exists": true,
+    "query_type": "Ticket log structure",
+    "test_query": "How many rows of ticket data are in the Ticket Log sheet and what are the first five columns?",
+    "expected_behaviour": "Count data rows and read the header row of the Ticket Log sheet.",
+    "gold_standard": "The Ticket Log sheet contains 30,000 data rows. The first five columns are: Ticket_ID, Vendor, Contract_Ref, Priority, Category.",
+    "notes": "Must state 30,000 rows and name the first five columns in order.",
+    "files": [
+      "dataset/office/off_12_vendor_performance_data.xlsx"
+    ]
+  },
+  {
+    "id": "office-Larg-43",
+    "category": "office",
+    "sheet": "Large Files",
+    "file_name": "off_12_vendor_performance_data.xlsx",
+    "file_path": "dataset/office/off_12_vendor_performance_data.xlsx",
+    "file_exists": true,
+    "query_type": "Priority distribution",
+    "test_query": "What are the priority levels used in the Ticket Log and what does SLA_Met indicate?",
+    "expected_behaviour": "Read the Priority column values and the SLA_Met column description.",
+    "gold_standard": "Four priority levels are used: P1 (2-hour SLA target), P2 (8-hour SLA target), P3 (24-hour SLA target), P4 (72-hour SLA target). The SLA_Met column contains 'Yes' or 'No' indicating whether the ticket was resolved within the SLA_Target_Hours. Tickets with SLA_Met='No' and P1/P2 priority have a Breach_Credit_USD value calculated.",
+    "notes": "Must name all four priorities with their SLA hours (2, 8, 24, 72) and explain the SLA_Met column logic.",
+    "files": [
+      "dataset/office/off_12_vendor_performance_data.xlsx"
+    ]
+  },
+  {
+    "id": "office-Larg-44",
+    "category": "office",
+    "sheet": "Large Files",
+    "file_name": "off_12_vendor_performance_data.xlsx",
+    "file_path": "dataset/office/off_12_vendor_performance_data.xlsx",
+    "file_exists": true,
+    "query_type": "Monthly KPI sheet",
+    "test_query": "What metrics are captured in the Monthly KPI Summary sheet?",
+    "expected_behaviour": "Read the column headers of the Monthly KPI Summary sheet.",
+    "gold_standard": "The Monthly KPI Summary sheet captures 11 metrics per vendor per month: Year_Month, Vendor, Total_Tickets, P1_Count, P2_Count, P3_Count, SLA_Compliance_Pct, Breach_Count, Total_Breach_Credits_USD, Avg_MTTR_Hours, Avg_CSAT. This allows trend analysis across the vendor portfolio.",
+    "notes": "Must name at least 8 of the 11 column names correctly including SLA_Compliance_Pct, Breach_Count, and Total_Breach_Credits_USD.",
+    "files": [
+      "dataset/office/off_12_vendor_performance_data.xlsx"
+    ]
+  },
+  {
+    "id": "pdf-Smal-1",
+    "category": "pdf",
+    "sheet": "Small to Medium (10KB\u20135.4MB)",
+    "file_name": "pdf_01_incident_report_inc0001234.pdf",
+    "file_path": "dataset/pdf/pdf_01_incident_report_inc0001234.pdf",
+    "file_exists": true,
+    "query_type": "Summarisation",
+    "test_query": "What happened in INC0001234 and what was the root cause?",
+    "expected_behaviour": "Extract: incident summary, duration, affected users, and root cause from the report.",
+    "gold_standard": "P1 BGP outage 14 Jan 2025, 847 APAC users, duration 2h 35min (35min over SLA). Root cause: Ansible Tower job AT-4421 applied DR BGP policy to prod routers via a CI/CD approval gate defect (evaluated state != Cancelled instead of state == Approved). Business impact: USD 142,000.",
+    "notes": "Must include duration, user count, root cause mechanism, and dollar impact. Vague summaries fail.",
+    "files": [
+      "dataset/pdf/pdf_01_incident_report_inc0001234.pdf"
+    ]
+  },
+  {
+    "id": "pdf-Smal-2",
+    "category": "pdf",
+    "sheet": "Small to Medium (10KB\u20135.4MB)",
+    "file_name": "pdf_01_incident_report_inc0001234.pdf",
+    "file_path": "dataset/pdf/pdf_01_incident_report_inc0001234.pdf",
+    "file_exists": true,
+    "query_type": "Filtered Extraction",
+    "test_query": "Which corrective actions are still in progress or pending \u2014 not yet complete?",
+    "expected_behaviour": "Filter the corrective actions table by status. Return only In Progress and Pending items with owners and due dates.",
+    "gold_standard": "In Progress: CA-01 (CI/CD gate fix, Platform Eng, due 2025-01-21), CA-02 (pre-flight diff check, Automation Team, due 2025-01-28). Pending: CA-05 (runbook update, Sarah Chen, due 2025-01-24), CA-06 (template audit, Automation Team, due 2025-02-07). CA-07 is Scheduled (post-mortem, 2025-01-21).",
+    "notes": "Must exclude Complete items and distinguish In Progress from Pending. All 5 non-complete actions needed.",
+    "files": [
+      "dataset/pdf/pdf_01_incident_report_inc0001234.pdf"
+    ]
+  },
+  {
+    "id": "pdf-Smal-3",
+    "category": "pdf",
+    "sheet": "Small to Medium (10KB\u20135.4MB)",
+    "file_name": "pdf_14_patch_management_report.pdf",
+    "file_path": "dataset/pdf/pdf_14_patch_management_report.pdf",
+    "file_exists": true,
+    "query_type": "Compliance Check",
+    "test_query": "Which platform missed the 72-hour Critical patch target and by how many percentage points?",
+    "expected_behaviour": "Identify the platform below the 95% policy target for 72-hour compliance with exact gap calculation.",
+    "gold_standard": "Windows Server 2019 failed at 71.8% \u2014 23.2 percentage points below the 95% target. 11 servers are outstanding, including 3 on compatibility holds, 1 OT system (MFG-CTRL-03) requiring Siemens vendor approval, and 7 with documented compensating controls.",
+    "notes": "Must calculate the gap (23.2pp), not just state the percentage. Must name specific outstanding host categories.",
+    "files": [
+      "dataset/pdf/pdf_14_patch_management_report.pdf"
+    ]
+  },
+  {
+    "id": "pdf-Smal-4",
+    "category": "pdf",
+    "sheet": "Small to Medium (10KB\u20135.4MB)",
+    "file_name": "pdf_14_patch_management_report.pdf",
+    "file_path": "dataset/pdf/pdf_14_patch_management_report.pdf",
+    "file_exists": true,
+    "query_type": "Exception Lookup",
+    "test_query": "Why is host MFG-CTRL-03 not patched and when will it be remediated?",
+    "expected_behaviour": "Locate the specific exception record for MFG-CTRL-03 with reason, compensating control, and date.",
+    "gold_standard": "MFG-CTRL-03 is an OT manufacturing control system \u2014 all patches require Siemens pre-qualification testing before application. It is air-gapped from the corporate network (physical console access only). No EDR agent (approved exception under POL-OT-001). Remediation: Q2 2025 (Siemens approval cycle).",
+    "notes": "Must explain air-gapped status and Siemens approval requirement. Generic OT exception answer fails.",
+    "files": [
+      "dataset/pdf/pdf_14_patch_management_report.pdf"
+    ]
+  },
+  {
+    "id": "pdf-Smal-5",
+    "category": "pdf",
+    "sheet": "Small to Medium (10KB\u20135.4MB)",
+    "file_name": "pdf_15_it_service_catalogue.pdf",
+    "file_path": "dataset/pdf/pdf_15_it_service_catalogue.pdf",
+    "file_exists": true,
+    "query_type": "Service Lookup",
+    "test_query": "What is the SLA and what's included vs excluded for a new engineering laptop?",
+    "expected_behaviour": "Extract CAT-HW-002: SLA, inclusions, and explicit exclusions.",
+    "gold_standard": "Engineering laptop (CAT-HW-002) SLA: 7 business days. Includes: Dell Precision 5690 or MacBook Pro 16\" M4 Pro, developer toolchain, Docker Desktop, VS Code, 32+ GB RAM. Excludes: licensed IDEs (raise CAT-SW-012); GPU workstations (raise CAT-HW-009).",
+    "notes": "Must include both inclusions AND exclusions with the specific catalogue item numbers for excluded items.",
+    "files": [
+      "dataset/pdf/pdf_15_it_service_catalogue.pdf"
+    ]
+  },
+  {
+    "id": "pdf-Smal-6",
+    "category": "pdf",
+    "sheet": "Small to Medium (10KB\u20135.4MB)",
+    "file_name": "pdf_15_it_service_catalogue.pdf",
+    "file_path": "dataset/pdf/pdf_15_it_service_catalogue.pdf",
+    "file_exists": true,
+    "query_type": "Policy Lookup",
+    "test_query": "What approval level is required for privileged access, and how long does that access last?",
+    "expected_behaviour": "Extract CAT-ID-011 requirements: who approves, time limit, and any conditions.",
+    "gold_standard": "Privileged access (CAT-ID-011) requires both manager AND CISO approval plus a written justification statement. SLA: 3 business days. Access is time-limited to a maximum of 90 days and must be renewed with re-approval after that period.",
+    "notes": "Must name both approvers (manager AND CISO) and state the 90-day time limit. Single-approver answer fails.",
+    "files": [
+      "dataset/pdf/pdf_15_it_service_catalogue.pdf"
+    ]
+  },
+  {
+    "id": "pdf-Smal-7",
+    "category": "pdf",
+    "sheet": "Small to Medium (10KB\u20135.4MB)",
+    "file_name": "pdf_13_capacity_planning_report.pdf",
+    "file_path": "dataset/pdf/pdf_13_capacity_planning_report.pdf",
+    "file_exists": true,
+    "query_type": "Critical Risk",
+    "test_query": "Which storage system will exhaust capacity soonest and what is the specific recommendation?",
+    "expected_behaviour": "Find the minimum 'months to full' row and extract the recommended action.",
+    "gold_standard": "Backup Target (Veeam / Dell ME5) exhausts first at 6.3 months, growing at +18 TB/month from 487TB/600TB used. Recommendation: add Azure Blob Cool tier as overflow for backups older than 30 days \u2014 $3,600/month additional opex. Configuration change only, no hardware required.",
+    "notes": "Must name Backup Target specifically (not SAN) and include the Azure Blob solution and cost. Generic 'expand storage' fails.",
+    "files": [
+      "dataset/pdf/pdf_13_capacity_planning_report.pdf"
+    ]
+  },
+  {
+    "id": "pdf-Smal-8",
+    "category": "pdf",
+    "sheet": "Small to Medium (10KB\u20135.4MB)",
+    "file_name": "pdf_13_capacity_planning_report.pdf",
+    "file_path": "dataset/pdf/pdf_13_capacity_planning_report.pdf",
+    "file_exists": true,
+    "query_type": "Investment Decision",
+    "test_query": "What is the most time-sensitive procurement and why does it have a hard deadline?",
+    "expected_behaviour": "Identify the item with the earliest decision deadline and explain the urgency.",
+    "gold_standard": "Pure FA-400 expansion (2\u00d7 150TB DirectFlash shelves, $310,000 capex) has a decision deadline of 2025-03-15 because the procurement lead time is 12 weeks. If not ordered by mid-March, the delivery will arrive after the SAN reaches capacity (exhausts in 9.3 months).",
+    "notes": "Must connect the order deadline to the 12-week lead time with the maths. 'Order soon' without the lead time reasoning fails.",
+    "files": [
+      "dataset/pdf/pdf_13_capacity_planning_report.pdf"
+    ]
+  },
+  {
+    "id": "pdf-Smal-9",
+    "category": "pdf",
+    "sheet": "Small to Medium (10KB\u20135.4MB)",
+    "file_name": "pdf_16_soc_playbook.pdf",
+    "file_path": "dataset/pdf/pdf_16_soc_playbook.pdf",
+    "file_exists": true,
+    "query_type": "Playbook Step",
+    "test_query": "At what step do I isolate an endpoint during a phishing investigation and how exactly?",
+    "expected_behaviour": "Extract the isolation step: trigger condition, tool, and exact command.",
+    "gold_standard": "Isolate at Step 7, triggered when a suspicious process is found in Step 6's CrowdStrike investigation. Command: 'falcon host containment --host-id <id> --action contain'. Important: always confirm with the user's manager before isolating production systems during business hours. DR assets are always isolated immediately without confirmation.",
+    "notes": "Must include the exact command syntax, the business-hours confirmation rule, and the DR asset exception. Partial answers fail.",
+    "files": [
+      "dataset/pdf/pdf_16_soc_playbook.pdf"
+    ]
+  },
+  {
+    "id": "pdf-Smal-10",
+    "category": "pdf",
+    "sheet": "Small to Medium (10KB\u20135.4MB)",
+    "file_name": "pdf_16_soc_playbook.pdf",
+    "file_path": "dataset/pdf/pdf_16_soc_playbook.pdf",
+    "file_exists": true,
+    "query_type": "Escalation Rule",
+    "test_query": "During a ransomware incident, at what threshold must the DRP be activated and who decides?",
+    "expected_behaviour": "Extract the DRP activation trigger and decision authority from the ransomware playbook.",
+    "gold_standard": "DRP is activated at Step 6 when more than 5 hosts are confirmed affected. The decision is at the CTO's discretion (Incident Commander James Wu, +1-555-0100). Additionally: if personal data is encrypted, the GDPR Art.33 clock starts at the moment of confirmation and DPO must be notified within 30 minutes.",
+    "notes": "Must include the '5 hosts' threshold, name the decision authority, AND include the GDPR 30-minute notification trigger.",
+    "files": [
+      "dataset/pdf/pdf_16_soc_playbook.pdf"
+    ]
+  },
+  {
+    "id": "pdf-Larg-11",
+    "category": "pdf",
+    "sheet": "Large Files (14MB\u201348MB)",
+    "file_name": "pdf_18_application_portfolio_review.pdf",
+    "file_path": "dataset/pdf/pdf_18_application_portfolio_review.pdf",
+    "file_exists": true,
+    "query_type": "Portfolio Health",
+    "test_query": "Which department has the most applications recommended for retirement and why?",
+    "expected_behaviour": "Find the department with maximum retire count and extract the reason.",
+    "gold_standard": "Customer Operations has the most retire-recommended applications at 5. These are pre-ServiceNow era ticketing tools with no active users, which were never decommissioned after ServiceNow CSM replaced them in 2024.",
+    "notes": "Must name Customer Operations specifically (not just 'several departments') and state the reason.",
+    "files": [
+      "dataset/pdf/pdf_18_application_portfolio_review.pdf"
+    ]
+  },
+  {
+    "id": "pdf-Larg-12",
+    "category": "pdf",
+    "sheet": "Large Files (14MB\u201348MB)",
+    "file_name": "pdf_18_application_portfolio_review.pdf",
+    "file_path": "dataset/pdf/pdf_18_application_portfolio_review.pdf",
+    "file_exists": true,
+    "query_type": "Technical Debt",
+    "test_query": "Which application has the highest technical debt score and what is the hard deadline?",
+    "expected_behaviour": "Identify the maximum score app and extract its deadline.",
+    "gold_standard": "Customer Flash Dashboards (4 apps) have the highest score at 91/100 Critical. The hard deadline is Q2 2025 \u2014 Adobe Flash Player reached end-of-life in January 2021 and these dashboards are currently running only via an isolated legacy IE11 browser VM, which is a compliance and security risk.",
+    "notes": "Must state Flash EOL date (Jan 2021) and the IE11 VM workaround to demonstrate the answer is grounded in the document.",
+    "files": [
+      "dataset/pdf/pdf_18_application_portfolio_review.pdf"
+    ]
+  },
+  {
+    "id": "pdf-Larg-13",
+    "category": "pdf",
+    "sheet": "Large Files (14MB\u201348MB)",
+    "file_name": "pdf_18_application_portfolio_review.pdf",
+    "file_path": "dataset/pdf/pdf_18_application_portfolio_review.pdf",
+    "file_exists": true,
+    "query_type": "Salesforce API Risk",
+    "test_query": "What is the Salesforce API deadline and what must happen before that date?",
+    "expected_behaviour": "Extract the specific Salesforce API version deprecation timeline and required action.",
+    "gold_standard": "Salesforce will disable API v44 in June 2025. Three AppExchange integrations in Sales/CRM are currently on v44 with hardcoded OAuth tokens and no error handling. These must be migrated to v58 REST API before May 2025 (one month before the June cutoff for testing time).",
+    "notes": "Must include the v44/v58 version numbers, June 2025 Salesforce deadline, and the May 2025 migration target. Vague 'update the API' fails.",
+    "files": [
+      "dataset/pdf/pdf_18_application_portfolio_review.pdf"
+    ]
+  },
+  {
+    "id": "pdf-Larg-14",
+    "category": "pdf",
+    "sheet": "Large Files (14MB\u201348MB)",
+    "file_name": "pdf_09_disaster_recovery_plan.pdf",
+    "file_path": "dataset/pdf/pdf_09_disaster_recovery_plan.pdf",
+    "file_exists": true,
+    "query_type": "RTO/RPO Query",
+    "test_query": "What are the RTO and RPO for Tier 1 services and did the last DR test pass?",
+    "expected_behaviour": "Extract the Tier 1 row from the recovery objectives table including the test result.",
+    "gold_standard": "Tier 1 (Business Critical \u2014 ServiceNow, SAP ERP, Salesforce, Finance): RTO 1 hour, RPO 15 minutes, warm standby at DR-DC2. Last test: PARTIAL PASS \u2014 SAP ERP exceeded the 1-hour RTO by 22 minutes due to Oracle Data Guard archive log shipping lag.",
+    "notes": "Must include the 22-minute overage and its specific cause (Oracle Data Guard lag). 'Generally passed' misrepresents the partial failure.",
+    "files": [
+      "dataset/pdf/pdf_09_disaster_recovery_plan.pdf"
+    ]
+  },
+  {
+    "id": "pdf-Larg-15",
+    "category": "pdf",
+    "sheet": "Large Files (14MB\u201348MB)",
+    "file_name": "pdf_09_disaster_recovery_plan.pdf",
+    "file_path": "dataset/pdf/pdf_09_disaster_recovery_plan.pdf",
+    "file_exists": true,
+    "query_type": "Recovery Procedure",
+    "test_query": "What is the first step to recover ServiceNow during a DR event?",
+    "expected_behaviour": "Extract Step 1 of the ServiceNow recovery procedure with the exact action and tool.",
+    "gold_standard": "Step 1: Declare DR to ServiceNow HI by logging into hi.service-now.com, opening a Support ticket, selecting DR Activation, and providing the activation code DR-2025-ACTIVE along with the primary contact details. Expected completion: 5 minutes. ServiceNow's contractual SLA is 30 minutes to provision the DR instance after this declaration.",
+    "notes": "Must include the activation code DR-2025-ACTIVE, the HI portal URL, and the 30-minute provisioning SLA. Generic 'call ServiceNow support' fails.",
+    "files": [
+      "dataset/pdf/pdf_09_disaster_recovery_plan.pdf"
+    ]
+  },
+  {
+    "id": "pdf-Larg-16",
+    "category": "pdf",
+    "sheet": "Large Files (14MB\u201348MB)",
+    "file_name": "pdf_09_disaster_recovery_plan.pdf",
+    "file_path": "dataset/pdf/pdf_09_disaster_recovery_plan.pdf",
+    "file_exists": true,
+    "query_type": "Crisis Team",
+    "test_query": "Who is the Network Recovery Lead and what is their specific role during DR activation?",
+    "expected_behaviour": "Extract the Network Lead row from the CMT table including contact and responsibilities.",
+    "gold_standard": "Network Recovery Lead: Mike Torres, Senior Network Architect. Contact: mike.t@co.com, +1-555-0142. Responsibilities: activates DR routing via the Ansible playbook 'dr-routing-activate.yml', then verifies BGP convergence and DNS propagation at the DR site.",
+    "notes": "Must name Mike Torres, the specific playbook name (dr-routing-activate.yml), and both verification tasks (BGP convergence AND DNS propagation).",
+    "files": [
+      "dataset/pdf/pdf_09_disaster_recovery_plan.pdf"
+    ]
+  },
+  {
+    "id": "pdf-Larg-17",
+    "category": "pdf",
+    "sheet": "Large Files (14MB\u201348MB)",
+    "file_name": "pdf_21_dc_consolidation_plan.pdf",
+    "file_path": "dataset/pdf/pdf_21_dc_consolidation_plan.pdf",
+    "file_exists": true,
+    "query_type": "Lease Deadline",
+    "test_query": "When does the DC-PRIMARY lease expire and what is the hard consequence of missing the deadline?",
+    "expected_behaviour": "Extract the lease expiry and the specific notice period requirement.",
+    "gold_standard": "DC-PRIMARY (Equinix LD6, London) lease expires December 2026. All 148 racks must be fully evacuated before expiry. The Equinix contract requires a 90-day exit notice, which means the final rack-return walkthrough must be completed by 15 November 2026 at the latest.",
+    "notes": "Must derive the 15 November 2026 walkthrough deadline from the 90-day notice period. Stating only 'December 2026' misses the critical operational implication.",
+    "files": [
+      "dataset/pdf/pdf_21_dc_consolidation_plan.pdf"
+    ]
+  },
+  {
+    "id": "pdf-Larg-18",
+    "category": "pdf",
+    "sheet": "Large Files (14MB\u201348MB)",
+    "file_name": "pdf_21_dc_consolidation_plan.pdf",
+    "file_path": "dataset/pdf/pdf_21_dc_consolidation_plan.pdf",
+    "file_exists": true,
+    "query_type": "Net Saving",
+    "test_query": "What is the total annual saving from the consolidation programme and how is it composed?",
+    "expected_behaviour": "Extract the net saving and break it down into its components.",
+    "gold_standard": "Total net saving: $940,000/yr from 2027. Composed of: direct infrastructure cost saving of $560,000/yr (from decommissioning DC-PRIMARY and DC-SECONDARY, branch consolidation, on-prem software reduction, and redeploying 2 FTE) plus facilities savings of $380,000/yr (power, cooling, physical security). Offset by $3M increase in cloud spend.",
+    "notes": "Must split the $940K into the $560K direct and $380K facilities components. Single total without breakdown fails.",
+    "files": [
+      "dataset/pdf/pdf_21_dc_consolidation_plan.pdf"
+    ]
+  },
+  {
+    "id": "pdf-Larg-19",
+    "category": "pdf",
+    "sheet": "Large Files (14MB\u201348MB)",
+    "file_name": "pdf_22_it_outsourcing_strategy.pdf",
+    "file_path": "dataset/pdf/pdf_22_it_outsourcing_strategy.pdf",
+    "file_exists": true,
+    "query_type": "Performance Issue",
+    "test_query": "Which provider received a Performance Improvement Notice and what specific KPIs must they meet?",
+    "expected_behaviour": "Find the PIN action and extract the specific measurable KPIs.",
+    "gold_standard": "Wipro received a Performance Improvement Notice (PIN) by February 2025. They must meet two specific KPIs within the 90-day window: (1) NOC SLA compliance must return to 95% (currently at 89%), and (2) staff turnover on our account must drop below 25% (4 lead engineers were replaced in 12 months). Failure triggers a competitive retender with HCL Tech and TCS shortlisted.",
+    "notes": "Must name Wipro and both specific KPI targets (95% SLA and < 25% turnover). Must also name the alternative providers (HCL Tech, TCS). Vague 'improve performance' fails.",
+    "files": [
+      "dataset/pdf/pdf_22_it_outsourcing_strategy.pdf"
+    ]
+  },
+  {
+    "id": "pdf-Larg-20",
+    "category": "pdf",
+    "sheet": "Large Files (14MB\u201348MB)",
+    "file_name": "pdf_22_it_outsourcing_strategy.pdf",
+    "file_path": "dataset/pdf/pdf_22_it_outsourcing_strategy.pdf",
+    "file_exists": true,
+    "query_type": "Exit Decision",
+    "test_query": "Which provider is being exited and what is driving the decision?",
+    "expected_behaviour": "Extract the exit action with provider, timeline, and specific business reason.",
+    "gold_standard": "Rackspace is being exited at contract expiry in July 2025. The exit is driven by a below-average score of 64/100 \u2014 the lowest in the portfolio \u2014 due to 3 infrastructure incidents in Q4 2024 attributed to Rackspace mismanagement (patching delay and firewall misconfiguration). The 8 hosted workloads are all cloud migration candidates in Wave 2 (Q3 2025), so migration is being accelerated to Q2 to enable the non-renewal.",
+    "notes": "Must name Rackspace, the 64/100 score, the specific Q4 2024 incidents, and the Q2 migration acceleration plan. Generic 'poor performance' fails.",
+    "files": [
+      "dataset/pdf/pdf_22_it_outsourcing_strategy.pdf"
+    ]
+  },
+  {
+    "id": "combo-All -1",
+    "category": "combo",
+    "sheet": "All 12 Combo Files",
+    "file_name": "combo_01_incident_postmortem.docx",
+    "file_path": "dataset/combo/combo_01_incident_postmortem.docx",
+    "file_exists": true,
+    "query_type": "Embedded asset inventory",
+    "test_query": "What types of visual assets are embedded in this document, including their names and tables, and how many are there?",
+    "expected_behaviour": "Count and describe each type of embedded image and table in the document.",
+    "gold_standard": "4 embedded JPEG images: (1) KPI panel \u2014 key metrics dashboard, (2) incident timeline \u2014 03:47 to 06:22 UTC events, (3) corrective action completion bar chart, (4) P1 SLA trend line chart. Plus 4 formatted data tables: financial impact, contributing factors, corrective actions, and SLA context.",
+    "notes": "Must count 4 JPEG images by name and 4 tables. Vague 'some charts' fails.",
+    "files": [
+      "dataset/combo/combo_01_incident_postmortem.docx"
+    ]
+  },
+  {
+    "id": "combo-All -2",
+    "category": "combo",
+    "sheet": "All 12 Combo Files",
+    "file_name": "combo_01_incident_postmortem.docx",
+    "file_path": "dataset/combo/combo_01_incident_postmortem.docx",
+    "file_exists": true,
+    "query_type": "Image content",
+    "test_query": "What does the Figure 1 KPI panel image show?",
+    "expected_behaviour": "Read the caption of the first embedded image and describe its content.",
+    "gold_standard": "Figure 1 caption: 'INC0001234 Key Performance Metrics'. The KPI panel shows 5 metric cards: Duration (2h 35min), Users Impacted (847 across SG/SYD/TYO), SLA Breach (+35 min, 84.2% compliance), Total Cost ($142,000), and Corrective Actions (7 total).",
+    "notes": "Must name all 5 KPI cards with their values from the caption.",
+    "files": [
+      "dataset/combo/combo_01_incident_postmortem.docx"
+    ]
+  },
+  {
+    "id": "combo-All -3",
+    "category": "combo",
+    "sheet": "All 12 Combo Files",
+    "file_name": "combo_01_incident_postmortem.docx",
+    "file_path": "dataset/combo/combo_01_incident_postmortem.docx",
+    "file_exists": true,
+    "query_type": "Table content",
+    "test_query": "What does the financial impact table show and what is the largest cost line?",
+    "expected_behaviour": "Read the financial impact breakdown table.",
+    "gold_standard": "5 cost categories plus a TOTAL row. Largest line: SAP ERP \u2014 EDI Transactions at $94,000 (logistics EDI interface downtime \u2014 2h 35min). Total: $142,000. Other lines: Staff Productivity $48,000, Salesforce CRM $28,000, Customer SLA Credits $12,000, Incident Response Overtime $2,040.",
+    "notes": "Must identify SAP ERP-EDI at $94,000 as the largest line AND state the $142,000 total.",
+    "files": [
+      "dataset/combo/combo_01_incident_postmortem.docx"
+    ]
+  },
+  {
+    "id": "combo-All -4",
+    "category": "combo",
+    "sheet": "All 12 Combo Files",
+    "file_name": "combo_01_incident_postmortem.docx",
+    "file_path": "dataset/combo/combo_01_incident_postmortem.docx",
+    "file_exists": true,
+    "query_type": "Timeline reading",
+    "test_query": "According to the embedded timeline chart (Figure 2), at what time was the root cause identified?",
+    "expected_behaviour": "Read the Figure 2 caption and the timeline image entry for root cause.",
+    "gold_standard": "04:08 UTC \u2014 'Root cause identified: AT-4421 applied DR BGP community filter to production (approval gate bug)' \u2014 21 minutes after the first BGP alert. Mike Torres and the DevOps team confirmed the Jenkinsfile approval gate defect.",
+    "notes": "Must state 04:08 UTC specifically and describe AT-4421/Jenkinsfile gate as the root cause.",
+    "files": [
+      "dataset/combo/combo_01_incident_postmortem.docx"
+    ]
+  },
+  {
+    "id": "combo-All -5",
+    "category": "combo",
+    "sheet": "All 12 Combo Files",
+    "file_name": "combo_02_sla_performance_report.pdf",
+    "file_path": "dataset/combo/combo_02_sla_performance_report.pdf",
+    "file_exists": true,
+    "query_type": "Multi-asset identification",
+    "test_query": "What types of charts are embedded in this PDF and how many are there?",
+    "expected_behaviour": "Count and categorise each chart type in the document.",
+    "gold_standard": "3 chart types: (1) Figure 1 \u2014 reportlab vector bar chart showing Q1 2025 SLA compliance by priority, (2) Figure 2 \u2014 reportlab vector line chart showing P1 compliance trend Jan-Mar 2025, (3) Figure 3 \u2014 embedded JPEG raster image (PIL-generated) showing monthly incident volume.",
+    "notes": "Must identify all 3 charts by figure number, distinguish vector vs raster, and describe each subject.",
+    "files": [
+      "dataset/combo/combo_02_sla_performance_report.pdf"
+    ]
+  },
+  {
+    "id": "combo-All -6",
+    "category": "combo",
+    "sheet": "All 12 Combo Files",
+    "file_name": "combo_02_sla_performance_report.pdf",
+    "file_path": "dataset/combo/combo_02_sla_performance_report.pdf",
+    "file_exists": true,
+    "query_type": "Vector chart reading",
+    "test_query": "What does Figure 1 show and which bars are coloured red vs green?",
+    "expected_behaviour": "Read the Figure 1 bar chart and its caption.",
+    "gold_standard": "Figure 1: Q1 2025 SLA Compliance by Priority. 5 bars: P1 Resolution (50.0% \u2014 RED, BREACH), P2 Resolution (91.7% \u2014 red/amber, BREACH), P3 Resolution (94.3% \u2014 GREEN, MET), Service Availability (99.71% \u2014 amber, BREACH), Change Success Rate (96.4% \u2014 amber, BREACH). Only P3 is green.",
+    "notes": "Must identify which specific bars are red (P1, P2) vs green (P3 only) with their percentages.",
+    "files": [
+      "dataset/combo/combo_02_sla_performance_report.pdf"
+    ]
+  },
+  {
+    "id": "combo-All -7",
+    "category": "combo",
+    "sheet": "All 12 Combo Files",
+    "file_name": "combo_02_sla_performance_report.pdf",
+    "file_path": "dataset/combo/combo_02_sla_performance_report.pdf",
+    "file_exists": true,
+    "query_type": "Table structure",
+    "test_query": "How many rows does Table 1 contain and what are the column headers?",
+    "expected_behaviour": "Read Table 1 in the document.",
+    "gold_standard": "Table 1: Q1 2025 SLA Compliance Summary. 7 columns: SLA Metric, Jan, Feb, Mar, Q1 Avg, Target, Status. 5 data rows (P1, P2, P3, Availability, Change Success) plus a header row = 6 rows total.",
+    "notes": "Must state 7 columns, 6 rows total, and name all 7 column headers.",
+    "files": [
+      "dataset/combo/combo_02_sla_performance_report.pdf"
+    ]
+  },
+  {
+    "id": "combo-All -8",
+    "category": "combo",
+    "sheet": "All 12 Combo Files",
+    "file_name": "combo_02_sla_performance_report.pdf",
+    "file_path": "dataset/combo/combo_02_sla_performance_report.pdf",
+    "file_exists": true,
+    "query_type": "Raster vs vector distinction",
+    "test_query": "What is the difference between Figure 1 and Figure 3 in terms of how they were generated?",
+    "expected_behaviour": "Read the captions of both figures.",
+    "gold_standard": "Figure 1 is a vector chart created directly in reportlab \u2014 smooth lines at any zoom, no pixel artifacts. Figure 3 is a JPEG raster image (caption says 'embedded raster chart') generated by PIL at 900\u00d7500 pixels \u2014 will show pixel artifacts when zoomed. Both show bar charts but one is scalable vector, the other fixed-resolution raster.",
+    "notes": "Must explain vector vs raster distinction and identify Figure 1 as vector and Figure 3 as raster JPEG.",
+    "files": [
+      "dataset/combo/combo_02_sla_performance_report.pdf"
+    ]
+  },
+  {
+    "id": "combo-All -9",
+    "category": "combo",
+    "sheet": "All 12 Combo Files",
+    "file_name": "combo_03_capacity_planning_report.docx",
+    "file_path": "dataset/combo/combo_03_capacity_planning_report.docx",
+    "file_exists": true,
+    "query_type": "Network diagram content",
+    "test_query": "What does Figure 1 (the network topology diagram) show and how are DOWN nodes identified?",
+    "expected_behaviour": "Read the Figure 1 caption and describe the diagram.",
+    "gold_standard": "Figure 1: 'APAC Network Topology \u2014 Impact Zone of INC0001234 (DOWN nodes shown in red)'. Shows the APAC network topology with ISP connections \u2192 APAC-CORE-R1/R2/R3 (shown in red/DOWN) \u2192 firewalls \u2192 distribution switches \u2192 servers. A legend at the bottom explains red lines = affected BGP paths, grey = normal paths.",
+    "notes": "Must describe: DOWN routers shown in red, ISP connections, firewalls, switches as downstream, and the legend.",
+    "files": [
+      "dataset/combo/combo_03_capacity_planning_report.docx"
+    ]
+  },
+  {
+    "id": "combo-All -10",
+    "category": "combo",
+    "sheet": "All 12 Combo Files",
+    "file_name": "combo_03_capacity_planning_report.docx",
+    "file_path": "dataset/combo/combo_03_capacity_planning_report.docx",
+    "file_exists": true,
+    "query_type": "Bar chart reading",
+    "test_query": "What does Figure 2 show and which systems are colour-coded red?",
+    "expected_behaviour": "Read the Figure 2 bar chart and caption.",
+    "gold_standard": "Figure 2: 'Current Infrastructure Utilisation % \u2014 January 2025'. 8 bars showing utilisation. Red bars (\u226590% CRITICAL): GPU-Farm-01 (98%), VMware-02 APAC (95%), Internet APAC (91%). Amber bars (\u226575%): Backup ME5 (81%), K8s APAC (73%). Blue bars (normal): SAN Primary (71%), SAN Secondary (64%), VMware-01 EMEA (68%).",
+    "notes": "Must identify GPU-Farm and VMware-02 APAC as red, state their percentages, and describe the colour-coding logic.",
+    "files": [
+      "dataset/combo/combo_03_capacity_planning_report.docx"
+    ]
+  },
+  {
+    "id": "combo-All -11",
+    "category": "combo",
+    "sheet": "All 12 Combo Files",
+    "file_name": "combo_03_capacity_planning_report.docx",
+    "file_path": "dataset/combo/combo_03_capacity_planning_report.docx",
+    "file_exists": true,
+    "query_type": "Line chart comparison",
+    "test_query": "What do Figures 3 and 4 each show and what is the trend direction in both?",
+    "expected_behaviour": "Read the captions of Figures 3 and 4.",
+    "gold_standard": "Figure 3: 'GPU-Farm-01 Peak Utilisation Growth \u2014 13-Month Trend' \u2014 shows GPU utilisation growing from 72% in Jan 2024 to 98% in Jan 2025 (strong upward trend). Figure 4: 'SAN Primary Storage Growth' \u2014 shows used TB growing from ~720TB to ~945TB over 12 months (~13TB/week linear growth). Both charts show consistently increasing trends heading toward critical thresholds.",
+    "notes": "Must describe both charts by figure number, name their specific subjects, and confirm upward trend for both.",
+    "files": [
+      "dataset/combo/combo_03_capacity_planning_report.docx"
+    ]
+  },
+  {
+    "id": "combo-All -12",
+    "category": "combo",
+    "sheet": "All 12 Combo Files",
+    "file_name": "combo_03_capacity_planning_report.docx",
+    "file_path": "dataset/combo/combo_03_capacity_planning_report.docx",
+    "file_exists": true,
+    "query_type": "Table lookup",
+    "test_query": "In the capacity risk table, which item has the shortest months-to-full, and what action is required, including its cost and decision deadline?",
+    "expected_behaviour": "Find the minimum value in the Months to Full column.",
+    "gold_standard": "Backup Target ME5 has the shortest runway at 6.3 months. Required action: Add Azure Blob Cool tier overflow at $43,200/year. Decision deadline: 2025-02-28. This means if no action is taken by February, the backup storage will exhaust around August 2025.",
+    "notes": "Must name Backup Target ME5, state 6.3 months, and specify the Azure Blob action with cost.",
+    "files": [
+      "dataset/combo/combo_03_capacity_planning_report.docx"
+    ]
+  },
+  {
+    "id": "combo-All -17",
+    "category": "combo",
+    "sheet": "All 12 Combo Files",
+    "file_name": "combo_05_vendor_performance_pack.docx",
+    "file_path": "dataset/combo/combo_05_vendor_performance_pack.docx",
+    "file_exists": true,
+    "query_type": "Scorecard panel",
+    "test_query": "What does the Figure 1 vendor scorecard KPI panel show?",
+    "expected_behaviour": "Read the Figure 1 caption and describe the panel.",
+    "gold_standard": "Figure 1: 'Q1 2025 Vendor Portfolio Overview'. 5 KPI cards: Total Spend ($4.3M/yr, 23 providers), EXCELLENT (2 vendors \u2014 NetGuard 94, PwC 91), GOOD (4 vendors \u2014 Cognizant 85, IBM 88, et al), AT RISK (1 \u2014 Wipro MSP 71, PIN issued), EXIT (1 \u2014 Rackspace 64, no-renew Jul 2025).",
+    "notes": "Must name all 5 KPI cards with their values including the specific vendor names in each category.",
+    "files": [
+      "dataset/combo/combo_05_vendor_performance_pack.docx"
+    ]
+  },
+  {
+    "id": "combo-All -18",
+    "category": "combo",
+    "sheet": "All 12 Combo Files",
+    "file_name": "combo_05_vendor_performance_pack.docx",
+    "file_path": "dataset/combo/combo_05_vendor_performance_pack.docx",
+    "file_exists": true,
+    "query_type": "Bar chart colours",
+    "test_query": "In Figure 2 (vendor scores bar chart), how many bars are coloured red and which vendors do they represent?",
+    "expected_behaviour": "Read the Figure 2 bar chart.",
+    "gold_standard": "2 red bars (scores below 75, indicating AT RISK or EXIT): Wipro MSP (71/100) and Rackspace (64/100). Green bars (\u226585): NetGuard, PwC, IBM, Cognizant, InfraLink. Amber bars (75-84): DataVault (76), CloudStore (82), Accenture (82).",
+    "notes": "Must name both red bars (Wipro 71, Rackspace 64) and correctly describe the green/amber bars.",
+    "files": [
+      "dataset/combo/combo_05_vendor_performance_pack.docx"
+    ]
+  },
+  {
+    "id": "combo-All -19",
+    "category": "combo",
+    "sheet": "All 12 Combo Files",
+    "file_name": "combo_05_vendor_performance_pack.docx",
+    "file_path": "dataset/combo/combo_05_vendor_performance_pack.docx",
+    "file_exists": true,
+    "query_type": "Line chart trend",
+    "test_query": "What does the Wipro trend chart (Figure 3) show and what is the caption?",
+    "expected_behaviour": "Read Figure 3 caption and describe the line chart.",
+    "gold_standard": "Figure 3 caption: 'Wipro MSP SLA Compliance \u2014 Declining Trend (Jul 2024\u2013Mar 2025)'. Two lines: Wipro Actual % (declining from 97% in July to 89% in Jan/Feb/Mar 2025) and Target 95% (flat horizontal). The gap between them shows the growing underperformance. Caption notes PIN issued February 2025 and 90-day window.",
+    "notes": "Must describe both lines (actual declining, target flat), the 97%\u219289% range, and the PIN issued notation.",
+    "files": [
+      "dataset/combo/combo_05_vendor_performance_pack.docx"
+    ]
+  },
+  {
+    "id": "combo-All -20",
+    "category": "combo",
+    "sheet": "All 12 Combo Files",
+    "file_name": "combo_05_vendor_performance_pack.docx",
+    "file_path": "dataset/combo/combo_05_vendor_performance_pack.docx",
+    "file_exists": true,
+    "query_type": "Migration table",
+    "test_query": "How many Rackspace workloads are listed in the exit plan table and which is due first?",
+    "expected_behaviour": "Count rows in the Rackspace migration table and find the earliest deadline.",
+    "gold_standard": "8 workloads listed. Earliest deadline: Test/Dev Environment due 2025-03-31 (owned by Ravi Patel, In Progress). The legacy HRMS and Finance App are due in April and May respectively. 6 of 8 workloads show 'Not Started' status.",
+    "notes": "Must state 8 workloads, identify Test/Dev (March 31) as first deadline, and note 6 are Not Started.",
+    "files": [
+      "dataset/combo/combo_05_vendor_performance_pack.docx"
+    ]
+  },
+  {
+    "id": "combo-All -21",
+    "category": "combo",
+    "sheet": "All 12 Combo Files",
+    "file_name": "combo_06_it_qbr_q1_2025.pptx",
+    "file_path": "dataset/combo/combo_06_it_qbr_q1_2025.pptx",
+    "file_exists": true,
+    "query_type": "Slide count and types",
+    "test_query": "Approximately how many slides are in this presentation and what types of content slides are there?",
+    "expected_behaviour": "Count slides and categorise the slide types.",
+    "gold_standard": "The presentation has approximately 60+ slides. Slide types: (1) title/cover slide with dark background, (2) bullet point slides with text lists, (3) embedded JPEG chart slides (bar charts showing SLA/capacity/vendor data), (4) embedded JPEG line chart slides (trend data), (5) data table slides with formatted tables. Each non-title slide contains one of these content types.",
+    "notes": "Must name all 5 slide types and give examples of what each contains.",
+    "files": [
+      "dataset/combo/combo_06_it_qbr_q1_2025.pptx"
+    ]
+  },
+  {
+    "id": "combo-All -22",
+    "category": "combo",
+    "sheet": "All 12 Combo Files",
+    "file_name": "combo_06_it_qbr_q1_2025.pptx",
+    "file_path": "dataset/combo/combo_06_it_qbr_q1_2025.pptx",
+    "file_exists": true,
+    "query_type": "Chart subject variety",
+    "test_query": "What different metrics do the bar chart slides show across the presentation?",
+    "expected_behaviour": "Sample several chart slide titles.",
+    "gold_standard": "Bar chart slides cover: SLA compliance by priority for each month of Q1 2025, FY2024 incident volume by month, P1 incident count by month, vendor performance scores, infrastructure capacity utilisation, patch compliance by platform, and IT budget vs actual. Each chart uses colour coding (red = BREACH/CRITICAL, green = MET/OK).",
+    "notes": "Must name at least 5 distinct chart subjects.",
+    "files": [
+      "dataset/combo/combo_06_it_qbr_q1_2025.pptx"
+    ]
+  },
+  {
+    "id": "combo-All -23",
+    "category": "combo",
+    "sheet": "All 12 Combo Files",
+    "file_name": "combo_06_it_qbr_q1_2025.pptx",
+    "file_path": "dataset/combo/combo_06_it_qbr_q1_2025.pptx",
+    "file_exists": true,
+    "query_type": "Table slide content",
+    "test_query": "What tables appear in the presentation and how many rows does the SLA performance table have?",
+    "expected_behaviour": "Find table slides and read their content.",
+    "gold_standard": "Table slides include: SLA Performance Q1 2025 vs Target (5 data rows + header), Capacity Investment Decisions (4 rows), Major Incidents Q1 2025 (4 rows), Corrective Actions register (5 rows), and Q2 2025 Priorities (5 rows). The SLA table has 7 columns and 6 rows total (header + 5 metrics).",
+    "notes": "Must name at least 4 table slides and state the SLA table dimensions (6 rows, 7 columns).",
+    "files": [
+      "dataset/combo/combo_06_it_qbr_q1_2025.pptx"
+    ]
+  },
+  {
+    "id": "combo-All -24",
+    "category": "combo",
+    "sheet": "All 12 Combo Files",
+    "file_name": "combo_06_it_qbr_q1_2025.pptx",
+    "file_path": "dataset/combo/combo_06_it_qbr_q1_2025.pptx",
+    "file_exists": true,
+    "query_type": "Executive summary bullets",
+    "test_query": "What are the three main topic areas covered in the Executive Summary bullet slide?",
+    "expected_behaviour": "Read the Executive Summary slide content.",
+    "gold_standard": "Three main areas: (1) Service performance in BREACH \u2014 P1 SLA 84.2% vs 99% (INC0001234), P2 91.7% vs 95%, Availability 99.71% vs 99.9%; (2) Key achievements \u2014 ServiceNow Vancouver, CMDB 68%\u219278%, patch compliance above 95%; (3) Investment decisions required \u2014 GPU cluster $220K by Jan 24, SAN Primary $310K by Mar 15.",
+    "notes": "Must name all three areas with specific metrics from each.",
+    "files": [
+      "dataset/combo/combo_06_it_qbr_q1_2025.pptx"
+    ]
+  },
+  {
+    "id": "combo-All -29",
+    "category": "combo",
+    "sheet": "All 12 Combo Files",
+    "file_name": "combo_08_architecture_document.docx",
+    "file_path": "dataset/combo/combo_08_architecture_document.docx",
+    "file_exists": true,
+    "query_type": "Network diagram",
+    "test_query": "What does Figure 1 (the APAC network topology) show and what do the red elements indicate?",
+    "expected_behaviour": "Read the Figure 1 caption and description.",
+    "gold_standard": "Figure 1 caption: 'APAC Network Topology \u2014 INC0001234 Impact (red = DOWN)'. The diagram shows: 3 ISPs connecting to 3 APAC core routers (APAC-CORE-R1, R2, R3 \u2014 shown in red as DOWN), 2 firewalls (FW-SG2, FW-SYD1 \u2014 shown in green as UP), 3 distribution switches, and downstream servers. Red connection lines show the affected BGP paths that went down during INC0001234.",
+    "notes": "Must name the 3 DOWN routers, explain red = DOWN convention, and describe the network hierarchy shown.",
+    "files": [
+      "dataset/combo/combo_08_architecture_document.docx"
+    ]
+  },
+  {
+    "id": "combo-All -30",
+    "category": "combo",
+    "sheet": "All 12 Combo Files",
+    "file_name": "combo_08_architecture_document.docx",
+    "file_path": "dataset/combo/combo_08_architecture_document.docx",
+    "file_exists": true,
+    "query_type": "Appendix count and content",
+    "test_query": "How many appendices does this document contain and what does each appendix include?",
+    "expected_behaviour": "Count appendix headings and describe their content.",
+    "gold_standard": "24 appendices (Appendix 1 through 24), each covering a different architecture topic area (storage, identity, applications, monitoring, DR, cloud, security, DevOps cycling through 8 topics). Each appendix contains: a paragraph of descriptive text, one embedded JPEG bar chart specific to that section, and a 3-row status table.",
+    "notes": "Must state 24 appendices and describe that each has text + JPEG chart + table.",
+    "files": [
+      "dataset/combo/combo_08_architecture_document.docx"
+    ]
+  },
+  {
+    "id": "combo-All -31",
+    "category": "combo",
+    "sheet": "All 12 Combo Files",
+    "file_name": "combo_08_architecture_document.docx",
+    "file_path": "dataset/combo/combo_08_architecture_document.docx",
+    "file_exists": true,
+    "query_type": "BGP config table",
+    "test_query": "What does the BGP configuration table show and which routers are marked as DOWN?",
+    "expected_behaviour": "Read the BGP configuration table in section 1.1.",
+    "gold_standard": "The table has 6 columns: Router, Site, Peer Count, Local AS, Peer ISPs, Status. 5 rows for 5 core routers. Three routers show 'DOWN \u2014 INC0001234': APAC-CORE-R1 (DC-PRIMARY-LD6, 6 peers), APAC-CORE-R2 (DC-PRIMARY-LD6, 6 peers), APAC-CORE-R3 (DC-DR2-FRA11, 6 peers). EMEA-CORE-R1 and AMER-CORE-R1 show UP \u2014 Nominal.",
+    "notes": "Must identify all three DOWN routers with their sites and confirm EMEA and AMER are UP.",
+    "files": [
+      "dataset/combo/combo_08_architecture_document.docx"
+    ]
+  },
+  {
+    "id": "combo-All -32",
+    "category": "combo",
+    "sheet": "All 12 Combo Files",
+    "file_name": "combo_08_architecture_document.docx",
+    "file_path": "dataset/combo/combo_08_architecture_document.docx",
+    "file_exists": true,
+    "query_type": "Compute risk table",
+    "test_query": "Which two systems are marked CRITICAL in the compute infrastructure table?",
+    "expected_behaviour": "Read the compute infrastructure table in section 2.",
+    "gold_standard": "PROD-VMware-02 APAC and GPU-Farm-01 A100",
+    "notes": "Must name both CRITICAL systems with utilisation percentages and their specific decision actions.",
+    "files": [
+      "dataset/combo/combo_08_architecture_document.docx"
+    ]
+  },
+  {
+    "id": "combo-All -33",
+    "category": "combo",
+    "sheet": "All 12 Combo Files",
+    "file_name": "combo_09_it_portfolio_workbook.xlsx",
+    "file_path": "dataset/combo/combo_09_it_portfolio_workbook.xlsx",
+    "file_exists": true,
+    "query_type": "Sheet inventory",
+    "test_query": "How many sheets are in this workbook and what are they named?",
+    "expected_behaviour": "List all sheet tabs.",
+    "gold_standard": "6 sheets, Incident Metrics , Vendor Performance , Patch Compliance , Budget vs Actuals, Monthly SLA Charts, Vendor Monthly Charts",
+    "notes": "Must name all sheets. Accept either 4-sheet or 6-sheet answer.",
+    "files": [
+      "dataset/combo/combo_09_it_portfolio_workbook.xlsx"
+    ]
+  },
+  {
+    "id": "combo-All -34",
+    "category": "combo",
+    "sheet": "All 12 Combo Files",
+    "file_name": "combo_09_it_portfolio_workbook.xlsx",
+    "file_path": "dataset/combo/combo_09_it_portfolio_workbook.xlsx",
+    "file_exists": true,
+    "query_type": "Row counts",
+    "test_query": "How many data rows does the Incident Metrics sheet have?",
+    "expected_behaviour": "Count rows on the Incident Metrics sheet.",
+    "gold_standard": "5,000 data rows (excluding 2 header rows \u2014 a title banner at row 1 and column headers at row 2). The first row is INC0001234 \u2014 manually set with all actual incident details.",
+    "notes": "Must state exactly 5,000 data rows and note INC0001234 is row 1 of the data.",
+    "files": [
+      "dataset/combo/combo_09_it_portfolio_workbook.xlsx"
+    ]
+  },
+  {
+    "id": "combo-All -35",
+    "category": "combo",
+    "sheet": "All 12 Combo Files",
+    "file_name": "combo_09_it_portfolio_workbook.xlsx",
+    "file_path": "dataset/combo/combo_09_it_portfolio_workbook.xlsx",
+    "file_exists": true,
+    "query_type": "Conditional formatting",
+    "test_query": "How are breach rows visually highlighted in the Incident Metrics sheet?",
+    "expected_behaviour": "Read the formatting rules applied to SLA_Met column.",
+    "gold_standard": "Rows where SLA_Met = 'No' have the SLA_Met cell highlighted with red background fill (FFD5D5). The entire row alternates light blue / white for readability, but the SLA_Met cell specifically turns red for breaches \u2014 making it easy to visually identify SLA failures while scanning the 5,000 rows.",
+    "notes": "Must describe the red cell fill on SLA_Met='No' AND the alternating row background.",
+    "files": [
+      "dataset/combo/combo_09_it_portfolio_workbook.xlsx"
+    ]
+  },
+  {
+    "id": "combo-All -36",
+    "category": "combo",
+    "sheet": "All 12 Combo Files",
+    "file_name": "combo_09_it_portfolio_workbook.xlsx",
+    "file_path": "dataset/combo/combo_09_it_portfolio_workbook.xlsx",
+    "file_exists": true,
+    "query_type": "Embedded charts",
+    "test_query": "What charts are embedded in the Incident Metrics sheet?",
+    "expected_behaviour": "Find embedded chart images in the Incident Metrics sheet.",
+    "gold_standard": "3 embedded PNG charts: (1) P1 SLA Compliance FY2023-2025 bar chart (anchored at A5003), (2) Incident Volume by Category bar chart (anchored at H5003), (3) P1 MTTR Trend line chart (anchored at A5020). These are positioned below the 5,000 data rows.",
+    "notes": "Must name all 3 charts and their anchor positions.",
+    "files": [
+      "dataset/combo/combo_09_it_portfolio_workbook.xlsx"
+    ]
+  },
+  {
+    "id": "combo-All -37",
+    "category": "combo",
+    "sheet": "All 12 Combo Files",
+    "file_name": "combo_10_dr_manual.docx",
+    "file_path": "dataset/combo/combo_10_dr_manual.docx",
+    "file_exists": true,
+    "query_type": "Appendix structure",
+    "test_query": "How many appendices does this document contain and how are they organised?",
+    "expected_behaviour": "Count appendices and describe their structure.",
+    "gold_standard": "36 appendices covering DR test results.",
+    "notes": "Must state 36 appendices (12 months \u00d7 3 years) and describe the 3 elements in each.",
+    "files": [
+      "dataset/combo/combo_10_dr_manual.docx"
+    ]
+  },
+  {
+    "id": "combo-All -38",
+    "category": "combo",
+    "sheet": "All 12 Combo Files",
+    "file_name": "combo_10_dr_manual.docx",
+    "file_path": "dataset/combo/combo_10_dr_manual.docx",
+    "file_exists": true,
+    "query_type": "KPI panel description",
+    "test_query": "What does Figure 1 (the DR KPI panel) show?",
+    "expected_behaviour": "Read the Figure 1 caption and panel content.",
+    "gold_standard": "Figure 1 caption: 'DR Recovery Targets by Service Tier'. 5 KPI cards: Tier 0 RTO (15 min \u2014 ServiceNow, Identity, DNS), Tier 1 RTO (60 min \u2014 SAP, Salesforce, Finance), Tier 0 RPO (5 min \u2014 zero lost transactions), Tier 1 RPO (15 min \u2014 SAP 12min last test = PASS), Last Test (Nov 2024 \u2014 SAP 22min over = fixed).",
+    "notes": "Must name all 5 KPI cards with their values.",
+    "files": [
+      "dataset/combo/combo_10_dr_manual.docx"
+    ]
+  },
+  {
+    "id": "combo-All -39",
+    "category": "combo",
+    "sheet": "All 12 Combo Files",
+    "file_name": "combo_10_dr_manual.docx",
+    "file_path": "dataset/combo/combo_10_dr_manual.docx",
+    "file_exists": true,
+    "query_type": "DR test history chart",
+    "test_query": "What does Figure 2 show, and how are the test scores colour-coded by band (green PASS / amber PARTIAL / red FAIL)? Identify any amber or red bars.",
+    "expected_behaviour": "Read the Figure 2 DR history bar chart.",
+    "gold_standard": "Figure 2: 'DR Test Scores \u2014 FY2021\u20132024'. 8 bars across 8 test dates. Colour coding per the chart legend: green \u226585 (PASS), amber/orange 70\u201384 (PARTIAL PASS), red <70 (FAIL). No bars are red (no test scored below 70). Two bars are amber/orange (partial pass): Feb 2021 (72%) and Aug 2021 (78%); the remaining six are green. Nov 2024 shows 88% (green \u2014 PASS despite the SAP RTO issue, which was contained to a 22-minute overage). (Note: the amber band may render as orange under JPEG compression; either term is acceptable.)",
+    "notes": "Must describe the 8-bar chart, identify amber bars as partial passes, and explain the colour thresholds.",
+    "files": [
+      "dataset/combo/combo_10_dr_manual.docx"
+    ]
+  },
+  {
+    "id": "combo-All -40",
+    "category": "combo",
+    "sheet": "All 12 Combo Files",
+    "file_name": "combo_10_dr_manual.docx",
+    "file_path": "dataset/combo/combo_10_dr_manual.docx",
+    "file_exists": true,
+    "query_type": "Nov 2024 test results table",
+    "test_query": "What does the November 2024 DR test results table show and which service FAILED?",
+    "expected_behaviour": "Read the DR test results table in section 2.1.",
+    "gold_standard": "6 services in the table. SAP ERP FAILED \u2014 actual RTO 82 minutes vs 60-minute target (22 minutes over). All others passed: ServiceNow 9 min (target 15), AD 11 min (target 15), DNS 8 min (target 15), Salesforce 23 min (target 60), Oracle RAC 52 min (target 45 \u2014 listed as PASS despite slight overage as the table shows PASS).",
+    "notes": "Must identify SAP ERP with 82 min actual vs 60 min target (22 min over) as the only FAIL.",
+    "files": [
+      "dataset/combo/combo_10_dr_manual.docx"
+    ]
+  },
+  {
+    "id": "combo-All -41",
+    "category": "combo",
+    "sheet": "All 12 Combo Files",
+    "file_name": "combo_11_vendor_review_pack.pptx",
+    "file_path": "dataset/combo/combo_11_vendor_review_pack.pptx",
+    "file_exists": true,
+    "query_type": "Vendor coverage",
+    "test_query": "How many vendors are profiled in this presentation and what is the structure per vendor?",
+    "expected_behaviour": "Count vendor profile groups and describe the slide structure.",
+    "gold_standard": "10 vendors profiled (DataVault, Wipro MSP, Cognizant, Rackspace, IBM, NetGuard, CloudStore, Accenture, PwC, InfraLink). For each vendor, there are 3 dedicated slides: (1) JPEG line chart showing 9-month performance trend vs target, (2) JPEG bar chart showing monthly SLA compliance for all 12 months of FY2024, (3) JPEG KPI scorecard panel with Q1 score, breaches, spend, and decision.",
+    "notes": "Must name all 10 vendors and describe the 3-slide structure per vendor.",
+    "files": [
+      "dataset/combo/combo_11_vendor_review_pack.pptx"
+    ]
+  },
+  {
+    "id": "combo-All -42",
+    "category": "combo",
+    "sheet": "All 12 Combo Files",
+    "file_name": "combo_11_vendor_review_pack.pptx",
+    "file_path": "dataset/combo/combo_11_vendor_review_pack.pptx",
+    "file_exists": true,
+    "query_type": "Portfolio overview chart",
+    "test_query": "What does the portfolio overview bar chart show, and how are the bars colour-coded by performance band (green / amber / red)?",
+    "expected_behaviour": "Read the portfolio bar chart slide.",
+    "gold_standard": "Chart title: 'Vendor Performance Scores \u2014 Q1 2025'. 10 bars, one per vendor, colour-coded by band. Green (\u226585 \u2014 EXCELLENT/GOOD): NetGuard 94, PwC 91, IBM 88, InfraLink 88, Cognizant 85. Amber/orange (75\u201384 \u2014 ACCEPTABLE): CloudStore 82, Accenture 82, DataVault 76. Red (<75 \u2014 AT RISK/EXIT): Wipro MSP 71, Rackspace 64. (Note: the amber band may render as orange due to image compression; either term is acceptable.)",
+    "notes": "Must identify the 2 red bars (Wipro 71, Rackspace 64) and note them as AT RISK/EXIT.",
+    "files": [
+      "dataset/combo/combo_11_vendor_review_pack.pptx"
+    ]
+  },
+  {
+    "id": "combo-All -43",
+    "category": "combo",
+    "sheet": "All 12 Combo Files",
+    "file_name": "combo_11_vendor_review_pack.pptx",
+    "file_path": "dataset/combo/combo_11_vendor_review_pack.pptx",
+    "file_exists": true,
+    "query_type": "KPI panel structure",
+    "test_query": "What does a vendor KPI scorecard panel contain, and describe the colour coding used?",
+    "expected_behaviour": "Read a vendor KPI panel slide.",
+    "gold_standard": "Each vendor KPI panel contains 4 cards: (1) Q1 Score (/100) with trend indicator \u2014 colour green/amber/red by score, (2) SLA Breaches count \u2014 green if 0, red if >0, (3) Annual Spend \u2014 shown in blue (informational), (4) Decision (EXCELLENT/EXTEND/RETAIN/ISSUE PIN/EXIT) \u2014 green for positive decisions, red for negative.",
+    "notes": "Must name all 4 cards and describe the colour logic for each.",
+    "files": [
+      "dataset/combo/combo_11_vendor_review_pack.pptx"
+    ]
+  },
+  {
+    "id": "combo-All -44",
+    "category": "combo",
+    "sheet": "All 12 Combo Files",
+    "file_name": "combo_11_vendor_review_pack.pptx",
+    "file_path": "dataset/combo/combo_11_vendor_review_pack.pptx",
+    "file_exists": true,
+    "query_type": "Rackspace recommendation",
+    "test_query": "What recommendation does the presentation make for Rackspace?",
+    "expected_behaviour": "Find the Rackspace vendor slides and read the decision.",
+    "gold_standard": "Rackspace KPI panel shows: Q1 Score 64/100 (red), SLA Breaches 3 (red), Annual Spend $240,000, Decision: EXIT (red). The trend chart shows \u2193 -12pp over 6 months. The monthly bar chart shows consistently low compliance. The recommendation is DO NOT RENEW at July 2025 contract expiry.",
+    "notes": "Must state EXIT decision, 64/100 score, 3 breaches, $240K spend, and July 2025 expiry date.",
+    "files": [
+      "dataset/combo/combo_11_vendor_review_pack.pptx"
+    ]
+  },
+  {
+    "id": "combo-All -45",
+    "category": "combo",
+    "sheet": "All 12 Combo Files",
+    "file_name": "combo_12_executive_security_dashboard.pdf",
+    "file_path": "dataset/combo/combo_12_executive_security_dashboard.pdf",
+    "file_exists": true,
+    "query_type": "Document structure",
+    "test_query": "How is this PDF organised and what types of content does it contain?",
+    "expected_behaviour": "Describe the overall document structure.",
+    "gold_standard": "Two main sections: (1) Section 1 \u2014 ISO 27001 compliance overview with a reportlab vector bar chart (domain compliance) and a detailed domain table; (2) Section 2 \u2014 12 monthly security summaries (January\u2013December 2024), each with a PIL JPEG bar chart showing security metrics (vulns, incidents, patches, violations) and a vulnerability detail table per month.",
+    "notes": "Must describe both sections, name both chart types (reportlab vector + PIL JPEG), and the 12-month structure.",
+    "files": [
+      "dataset/combo/combo_12_executive_security_dashboard.pdf"
+    ]
+  },
+  {
+    "id": "combo-All -46",
+    "category": "combo",
+    "sheet": "All 12 Combo Files",
+    "file_name": "combo_12_executive_security_dashboard.pdf",
+    "file_path": "dataset/combo/combo_12_executive_security_dashboard.pdf",
+    "file_exists": true,
+    "query_type": "Vector chart reading",
+    "test_query": "What does Figure 1 (the reportlab vector chart) show and which domain is in red?",
+    "expected_behaviour": "Read the Figure 1 chart and its caption.",
+    "gold_standard": "Figure 1 caption: 'ISO 27001 Domain Compliance \u2014 Q4 2024 | Ernst & Young Audit'. Reportlab VerticalBarChart showing 12 ISO domains. Green \u226590%: A.5 (100%), A.10 (100%), A.11 (91.7%). Red <80%: A.15 Supplier Relationships (71.4%). Amber 80-89%: A.6, A.7, A.9, A.12, A.13, A.16, A.17. The red bar for A.15 is the lowest.",
+    "notes": "Must identify A.15 at 71.4% as the red bar, name the green domains, and quote Figure 1 caption.",
+    "files": [
+      "dataset/combo/combo_12_executive_security_dashboard.pdf"
+    ]
+  },
+  {
+    "id": "combo-All -47",
+    "category": "combo",
+    "sheet": "All 12 Combo Files",
+    "file_name": "combo_12_executive_security_dashboard.pdf",
+    "file_path": "dataset/combo/combo_12_executive_security_dashboard.pdf",
+    "file_exists": true,
+    "query_type": "Monthly chart frequency",
+    "test_query": "How many total JPEG security charts are embedded in Section 2?",
+    "expected_behaviour": "Count the PIL JPEG charts across all monthly sections.",
+    "gold_standard": "12 JPEG security metric bar charts \u2014 one per month (January through December 2024). Each is labelled Figure 2 through Figure 13 (12 figures). Each shows 5 security metrics: Critical Vulns, High Vulns, Incidents (High+), Failed Patches, Policy Violations.",
+    "notes": "Must state 12 JPEG charts, number them as Figures 2-13, and name the 5 metrics each chart shows.",
+    "files": [
+      "dataset/combo/combo_12_executive_security_dashboard.pdf"
+    ]
+  },
+  {
+    "id": "combo-All -48",
+    "category": "combo",
+    "sheet": "All 12 Combo Files",
+    "file_name": "combo_12_executive_security_dashboard.pdf",
+    "file_path": "dataset/combo/combo_12_executive_security_dashboard.pdf",
+    "file_exists": true,
+    "query_type": "Vulnerability table structure",
+    "test_query": "What columns does each monthly vulnerability table contain and how many rows?",
+    "expected_behaviour": "Read a monthly vulnerability table.",
+    "gold_standard": "6 columns: CVE, CVSS, Affected Hosts, Patched, Days to Patch, Status. Variable rows per month based on critical CVE count \u2014 typically 3-5 data rows.",
+    "notes": "Must name all 6 columns and identify the 5 CVEs that appear.",
+    "files": [
+      "dataset/combo/combo_12_executive_security_dashboard.pdf"
+    ]
+  },
+  {
+    "id": "image-Stan-1",
+    "category": "image",
+    "sheet": "Standard Images (12 files)",
+    "file_name": "img_01_sn_incident_form_error.jpeg",
+    "file_path": "dataset/image/img_01_sn_incident_form_error.jpeg",
+    "file_exists": true,
+    "query_type": "Extraction",
+    "test_query": "How many required fields are missing and which ones?",
+    "expected_behaviour": "Read the red error banner and required-field markers.",
+    "gold_standard": "3 required fields missing: Short Description, Category, and Assignment Group (all show 'Required \u2014 cannot be empty').",
+    "notes": "",
+    "files": [
+      "dataset/image/img_01_sn_incident_form_error.jpeg"
+    ]
+  },
+  {
+    "id": "image-Stan-2",
+    "category": "image",
+    "sheet": "Standard Images (12 files)",
+    "file_name": "img_01_sn_incident_form_error.jpeg",
+    "file_path": "dataset/image/img_01_sn_incident_form_error.jpeg",
+    "file_exists": true,
+    "query_type": "Extraction",
+    "test_query": "What is the caller name and the priority shown?",
+    "expected_behaviour": "Read the pre-filled fields.",
+    "gold_standard": "Caller: Sarah Chen. Priority: 1 - Critical.",
+    "notes": "",
+    "files": [
+      "dataset/image/img_01_sn_incident_form_error.jpeg"
+    ]
+  },
+  {
+    "id": "image-Stan-3",
+    "category": "image",
+    "sheet": "Standard Images (12 files)",
+    "file_name": "img_01_sn_incident_form_error.jpeg",
+    "file_path": "dataset/image/img_01_sn_incident_form_error.jpeg",
+    "file_exists": true,
+    "query_type": "Reasoning",
+    "test_query": "What must the user complete before submitting?",
+    "expected_behaviour": "Infer from the validation state.",
+    "gold_standard": "The 3 blank required fields (Short Description, Category, Assignment Group) must be filled before Submit will succeed.",
+    "notes": "",
+    "files": [
+      "dataset/image/img_01_sn_incident_form_error.jpeg"
+    ]
+  },
+  {
+    "id": "image-Stan-4",
+    "category": "image",
+    "sheet": "Standard Images (12 files)",
+    "file_name": "img_01_sn_incident_form_error.jpeg",
+    "file_path": "dataset/image/img_01_sn_incident_form_error.jpeg",
+    "file_exists": true,
+    "query_type": "Extraction",
+    "test_query": "What incident number is shown in the breadcrumb?",
+    "expected_behaviour": "Read the navigation breadcrumb.",
+    "gold_standard": "INC0009876 (shown in the breadcrumb as a new incident being created).",
+    "notes": "",
+    "files": [
+      "dataset/image/img_01_sn_incident_form_error.jpeg"
+    ]
+  },
+  {
+    "id": "image-Stan-5",
+    "category": "image",
+    "sheet": "Standard Images (12 files)",
+    "file_name": "img_02_sla_compliance_dashboard.jpeg",
+    "file_path": "dataset/image/img_02_sla_compliance_dashboard.jpeg",
+    "file_exists": true,
+    "query_type": "Extraction",
+    "test_query": "Which SLA categories show BREACH status, and what is each one's actual value versus target? (Also note any category that is MET.)",
+    "expected_behaviour": "Read the KPI cards.",
+    "gold_standard": "Three categories show BREACH: P1 Resolution (84.2% vs 99.0% target), P2 Resolution (91.7% vs 95.0% target), and Availability (99.71% vs 99.9% target). P3 Resolution shows MET (94.3% vs 90.0% target).",
+    "notes": "",
+    "files": [
+      "dataset/image/img_02_sla_compliance_dashboard.jpeg"
+    ]
+  },
+  {
+    "id": "image-Stan-6",
+    "category": "image",
+    "sheet": "Standard Images (12 files)",
+    "file_name": "img_02_sla_compliance_dashboard.jpeg",
+    "file_path": "dataset/image/img_02_sla_compliance_dashboard.jpeg",
+    "file_exists": true,
+    "query_type": "Extraction",
+    "test_query": "What was the monthly P1 breach rate across Q1?",
+    "expected_behaviour": "Read the bar chart.",
+    "gold_standard": "January 50.0%, February 40.0%, March 16.7% \u2014 improving month over month but all above the <1% target.",
+    "notes": "",
+    "files": [
+      "dataset/image/img_02_sla_compliance_dashboard.jpeg"
+    ]
+  },
+  {
+    "id": "image-Stan-7",
+    "category": "image",
+    "sheet": "Standard Images (12 files)",
+    "file_name": "img_02_sla_compliance_dashboard.jpeg",
+    "file_path": "dataset/image/img_02_sla_compliance_dashboard.jpeg",
+    "file_exists": true,
+    "query_type": "Extraction",
+    "test_query": "Which vendor has the lowest and which has the highest SLA score? Include each vendor's score and status.",
+    "expected_behaviour": "Read the vendor table.",
+    "gold_standard": "Lowest SLA score: SwiftOps Ltd. at 71/100 (status HIGH). Highest SLA score: NetGuard Systems at 94/100 (status LOW).",
+    "notes": "",
+    "files": [
+      "dataset/image/img_02_sla_compliance_dashboard.jpeg"
+    ]
+  },
+  {
+    "id": "image-Stan-8",
+    "category": "image",
+    "sheet": "Standard Images (12 files)",
+    "file_name": "img_02_sla_compliance_dashboard.jpeg",
+    "file_path": "dataset/image/img_02_sla_compliance_dashboard.jpeg",
+    "file_exists": true,
+    "query_type": "Reasoning",
+    "test_query": "What is the worst single SLA metric vs its target?",
+    "expected_behaviour": "Compare each KPI to its target gap.",
+    "gold_standard": "P1 Resolution: 84.2% vs 99% target \u2014 a 14.8-point gap, the worst breach on the dashboard.",
+    "notes": "",
+    "files": [
+      "dataset/image/img_02_sla_compliance_dashboard.jpeg"
+    ]
+  },
+  {
+    "id": "image-Stan-9",
+    "category": "image",
+    "sheet": "Standard Images (12 files)",
+    "file_name": "img_03_security_cve_report.jpeg",
+    "file_path": "dataset/image/img_03_security_cve_report.jpeg",
+    "file_exists": true,
+    "query_type": "Extraction",
+    "test_query": "How many vulnerabilities at each severity level?",
+    "expected_behaviour": "Read the summary cards.",
+    "gold_standard": "Critical: 3, High: 11, Medium: 28, Low: 64.",
+    "notes": "",
+    "files": [
+      "dataset/image/img_03_security_cve_report.jpeg"
+    ]
+  },
+  {
+    "id": "image-Stan-10",
+    "category": "image",
+    "sheet": "Standard Images (12 files)",
+    "file_name": "img_03_security_cve_report.jpeg",
+    "file_path": "dataset/image/img_03_security_cve_report.jpeg",
+    "file_exists": true,
+    "query_type": "Extraction",
+    "test_query": "Which CVE is PATCHED and which is ISOLATED?",
+    "expected_behaviour": "Read the patch-status column.",
+    "gold_standard": "PATCHED: CVE-2024-21413 and CVE-2024-23897. ISOLATED: CVE-2021-44228 (Log4Shell) \u2014 hosts in restricted VLAN.",
+    "notes": "",
+    "files": [
+      "dataset/image/img_03_security_cve_report.jpeg"
+    ]
+  },
+  {
+    "id": "image-Stan-11",
+    "category": "image",
+    "sheet": "Standard Images (12 files)",
+    "file_name": "img_03_security_cve_report.jpeg",
+    "file_path": "dataset/image/img_03_security_cve_report.jpeg",
+    "file_exists": true,
+    "query_type": "Extraction",
+    "test_query": "Which CVE has the highest CVSS and what type?",
+    "expected_behaviour": "Read the CVSS column.",
+    "gold_standard": "CVE-2021-44228 (Log4Shell) at CVSS 10.0 \u2014 a JNDI lookup RCE.",
+    "notes": "",
+    "files": [
+      "dataset/image/img_03_security_cve_report.jpeg"
+    ]
+  },
+  {
+    "id": "image-Stan-12",
+    "category": "image",
+    "sheet": "Standard Images (12 files)",
+    "file_name": "img_03_security_cve_report.jpeg",
+    "file_path": "dataset/image/img_03_security_cve_report.jpeg",
+    "file_exists": true,
+    "query_type": "Reasoning",
+    "test_query": "Which CVE poses the most urgent active threat and why?Which CVE poses the most urgent active, unremediated threat, and why? (Consider both active exploitation and current patch status.)",
+    "expected_behaviour": "Combine severity + exploitation status.",
+    "gold_standard": "CVE-2024-43461 (CVSS 9.1) \u2014 MSHTML spoofing via crafted .url file, under active ransomware campaigns targeting the financial sector. It is the most urgent active threat because it combines confirmed active exploitation with the largest unremediated exposure: it affects all Windows 10/11 endpoints (3,218) and patching is only IN PROGRESS at 96.6%, leaving 110 endpoints still outstanding. By contrast, the higher-scored actively-exploited CVE-2024-21413 (CVSS 9.8, Outlook RCE) is already OK \u2013 PATCHED across all 14 Exchange servers, so its residual risk is far lower.",
+    "notes": "",
+    "files": [
+      "dataset/image/img_03_security_cve_report.jpeg"
+    ]
+  },
+  {
+    "id": "image-Stan-13",
+    "category": "image",
+    "sheet": "Standard Images (12 files)",
+    "file_name": "img_04_ops_monitoring.jpeg",
+    "file_path": "dataset/image/img_04_ops_monitoring.jpeg",
+    "file_exists": true,
+    "query_type": "Extraction",
+    "test_query": "Which service is in OUTAGE and what does its note say?",
+    "expected_behaviour": "Read the status table.",
+    "gold_standard": "APAC Core Net R1/R2/R3 \u2014 OUTAGE, 0.00% availability, BGP 0/6 peers UP, note: 'INC0001234 P1 \u2014 rollback in progress'.",
+    "notes": "",
+    "files": [
+      "dataset/image/img_04_ops_monitoring.jpeg"
+    ]
+  },
+  {
+    "id": "image-Stan-14",
+    "category": "image",
+    "sheet": "Standard Images (12 files)",
+    "file_name": "img_04_ops_monitoring.jpeg",
+    "file_path": "dataset/image/img_04_ops_monitoring.jpeg",
+    "file_exists": true,
+    "query_type": "Extraction",
+    "test_query": "Which service is DEGRADED (not full outage)?",
+    "expected_behaviour": "Read the amber status row.",
+    "gold_standard": "Backup Jobs (Veeam) \u2014 DEGRADED, 97.10%, 487TB/600TB, note: '3 jobs failed \u2014 retry 23:00 UTC'.",
+    "notes": "",
+    "files": [
+      "dataset/image/img_04_ops_monitoring.jpeg"
+    ]
+  },
+  {
+    "id": "image-Stan-15",
+    "category": "image",
+    "sheet": "Standard Images (12 files)",
+    "file_name": "img_04_ops_monitoring.jpeg",
+    "file_path": "dataset/image/img_04_ops_monitoring.jpeg",
+    "file_exists": true,
+    "query_type": "Extraction",
+    "test_query": "What does the summary footer show?",
+    "expected_behaviour": "Read the footer.",
+    "gold_standard": "12 OPERATIONAL, 1 DEGRADED (Veeam Backup: 3 failed jobs), 1 OUTAGE (APAC Core Network \u2014 INC0001234 P1).",
+    "notes": "",
+    "files": [
+      "dataset/image/img_04_ops_monitoring.jpeg"
+    ]
+  },
+  {
+    "id": "image-Stan-16",
+    "category": "image",
+    "sheet": "Standard Images (12 files)",
+    "file_name": "img_04_ops_monitoring.jpeg",
+    "file_path": "dataset/image/img_04_ops_monitoring.jpeg",
+    "file_exists": true,
+    "query_type": "Extraction",
+    "test_query": "What is the Identity service auth rate and DC count?",
+    "expected_behaviour": "Read the Identity row.",
+    "gold_standard": "Identity (AD + Okta): 1,247 auth/min, 4 DCs healthy, Okta operational \u2014 OPERATIONAL.",
+    "notes": "",
+    "files": [
+      "dataset/image/img_04_ops_monitoring.jpeg"
+    ]
+  },
+  {
+    "id": "image-Stan-17",
+    "category": "image",
+    "sheet": "Standard Images (12 files)",
+    "file_name": "img_05_patch_compliance_matrix.png",
+    "file_path": "dataset/image/img_05_patch_compliance_matrix.png",
+    "file_exists": true,
+    "query_type": "Extraction",
+    "test_query": "Which platforms show BREACH and their 72-hr compliance?",
+    "expected_behaviour": "Read the status column.",
+    "gold_standard": "Windows Server 2019 (71.8%) and VMware ESXi 8.0 U2 (50.0%) \u2014 both BREACH vs 95% target.",
+    "notes": "",
+    "files": [
+      "dataset/image/img_05_patch_compliance_matrix.png"
+    ]
+  },
+  {
+    "id": "image-Stan-18",
+    "category": "image",
+    "sheet": "Standard Images (12 files)",
+    "file_name": "img_05_patch_compliance_matrix.png",
+    "file_path": "dataset/image/img_05_patch_compliance_matrix.png",
+    "file_exists": true,
+    "query_type": "Extraction",
+    "test_query": "How many Critical patches are missing in total, and which platform has the most missing Critical patches?",
+    "expected_behaviour": "Read the Critical column + total row.",
+    "gold_standard": "8 missing Critical patches in total. Windows Server 2019 has the most missing Critical patches (6 of the 8; the remaining 2 are on VMware ESXi 8.0 U2). Both platforms are flagged BREACH. (Note: if \"worst\" is read as lowest 72-hour compliance instead, VMware ESXi 8.0 U2 is lowest at 50.0% \u2014 but by missing-Critical count the worst is Windows Server 2019.)",
+    "notes": "",
+    "files": [
+      "dataset/image/img_05_patch_compliance_matrix.png"
+    ]
+  },
+  {
+    "id": "image-Stan-19",
+    "category": "image",
+    "sheet": "Standard Images (12 files)",
+    "file_name": "img_05_patch_compliance_matrix.png",
+    "file_path": "dataset/image/img_05_patch_compliance_matrix.png",
+    "file_exists": true,
+    "query_type": "Extraction",
+    "test_query": "Which platform is COMPLIANT at 100%?",
+    "expected_behaviour": "Read the status column.",
+    "gold_standard": "RHEL 9.x (all) \u2014 COMPLIANT, 100% on both 72-hr and 30-day windows.",
+    "notes": "",
+    "files": [
+      "dataset/image/img_05_patch_compliance_matrix.png"
+    ]
+  },
+  {
+    "id": "image-Stan-20",
+    "category": "image",
+    "sheet": "Standard Images (12 files)",
+    "file_name": "img_05_patch_compliance_matrix.png",
+    "file_path": "dataset/image/img_05_patch_compliance_matrix.png",
+    "file_exists": true,
+    "query_type": "Reasoning",
+    "test_query": "Which breach is most dangerous and why?",
+    "expected_behaviour": "Combine compliance % with missing-critical count.",
+    "gold_standard": "WS2019 \u2014 71.8% with 6 missing Critical and 11 missing High patches is the highest-risk; ESXi 8 at 50% is worse on % but has fewer hosts (6).",
+    "notes": "",
+    "files": [
+      "dataset/image/img_05_patch_compliance_matrix.png"
+    ]
+  },
+  {
+    "id": "image-Stan-21",
+    "category": "image",
+    "sheet": "Standard Images (12 files)",
+    "file_name": "img_06_network_topology.png",
+    "file_path": "dataset/image/img_06_network_topology.png",
+    "file_exists": true,
+    "query_type": "Extraction",
+    "test_query": "What does the red incident annotation box say?",
+    "expected_behaviour": "Read the red box.",
+    "gold_standard": "'INC0001234 - P1 ACTIVE \u2014 BGP peers DOWN: 3 of 6 \u2014 APAC-CORE-R1, R2, R3 \u2014 847 users impacted'.",
+    "notes": "",
+    "files": [
+      "dataset/image/img_06_network_topology.png"
+    ]
+  },
+  {
+    "id": "image-Stan-22",
+    "category": "image",
+    "sheet": "Standard Images (12 files)",
+    "file_name": "img_06_network_topology.png",
+    "file_path": "dataset/image/img_06_network_topology.png",
+    "file_exists": true,
+    "query_type": "Extraction",
+    "test_query": "Which two ISPs peer with APAC and their AS numbers?",
+    "expected_behaviour": "Read the ISP nodes.",
+    "gold_standard": "Telstra AS4637 and NTT AS2914.",
+    "notes": "",
+    "files": [
+      "dataset/image/img_06_network_topology.png"
+    ]
+  },
+  {
+    "id": "image-Stan-23",
+    "category": "image",
+    "sheet": "Standard Images (12 files)",
+    "file_name": "img_06_network_topology.png",
+    "file_path": "dataset/image/img_06_network_topology.png",
+    "file_exists": true,
+    "query_type": "Extraction",
+    "test_query": "How many users impacted and in which cities?",
+    "expected_behaviour": "Read the APAC users ellipse.",
+    "gold_standard": "847 APAC users across Singapore, Sydney, Tokyo (SG - SYD - TYO).",
+    "notes": "",
+    "files": [
+      "dataset/image/img_06_network_topology.png"
+    ]
+  },
+  {
+    "id": "image-Stan-24",
+    "category": "image",
+    "sheet": "Standard Images (12 files)",
+    "file_name": "img_06_network_topology.png",
+    "file_path": "dataset/image/img_06_network_topology.png",
+    "file_exists": true,
+    "query_type": "Extraction",
+    "test_query": "Which regions are fully operational?",
+    "expected_behaviour": "Read the UP/NORMAL nodes.",
+    "gold_standard": "EMEA (CORE-R1 UP, DC-PRIMARY + DC-DR2 NORMAL) and AMER (CORE-R1 UP, AMER-DC1 NORMAL).",
+    "notes": "",
+    "files": [
+      "dataset/image/img_06_network_topology.png"
+    ]
+  },
+  {
+    "id": "image-Stan-25",
+    "category": "image",
+    "sheet": "Standard Images (12 files)",
+    "file_name": "img_07_cmdb_health_scorecard.png",
+    "file_path": "dataset/image/img_07_cmdb_health_scorecard.png",
+    "file_exists": true,
+    "query_type": "Extraction",
+    "test_query": "Which health metric is furthest from its target (largest gap between current value and target)?",
+    "expected_behaviour": "Read the KPI gauges.",
+    "gold_standard": "CI Accuracy: 61.4% vs 90% target \u2014 a 28.6-point gap, the largest of any metric. Relationship Completeness is next-worst at 54.1% vs 80% (a 25.9-point gap); although it has the lowest raw value, its gap-to-target is smaller than CI Accuracy's.",
+    "notes": "",
+    "files": [
+      "dataset/image/img_07_cmdb_health_scorecard.png"
+    ]
+  },
+  {
+    "id": "image-Stan-26",
+    "category": "image",
+    "sheet": "Standard Images (12 files)",
+    "file_name": "img_07_cmdb_health_scorecard.png",
+    "file_path": "dataset/image/img_07_cmdb_health_scorecard.png",
+    "file_exists": true,
+    "query_type": "Extraction",
+    "test_query": "Which CI class has the lowest accuracy and why?",
+    "expected_behaviour": "Read the CI Class table.",
+    "gold_standard": "Service \u2014 Business Service: 0.0% accuracy (all manual, no auto-discovery exists \u2014 Phase 2 required).",
+    "notes": "",
+    "files": [
+      "dataset/image/img_07_cmdb_health_scorecard.png"
+    ]
+  },
+  {
+    "id": "image-Stan-27",
+    "category": "image",
+    "sheet": "Standard Images (12 files)",
+    "file_name": "img_07_cmdb_health_scorecard.png",
+    "file_path": "dataset/image/img_07_cmdb_health_scorecard.png",
+    "file_exists": true,
+    "query_type": "Extraction",
+    "test_query": "Which CI class achieved 100% accuracy?",
+    "expected_behaviour": "Read the table.",
+    "gold_standard": "Server \u2014 Cloud AWS EC2: 100.0% (fully automated via AWS Config).",
+    "notes": "",
+    "files": [
+      "dataset/image/img_07_cmdb_health_scorecard.png"
+    ]
+  },
+  {
+    "id": "image-Stan-28",
+    "category": "image",
+    "sheet": "Standard Images (12 files)",
+    "file_name": "img_07_cmdb_health_scorecard.png",
+    "file_path": "dataset/image/img_07_cmdb_health_scorecard.png",
+    "file_exists": true,
+    "query_type": "Reasoning",
+    "test_query": "Why is Application\u2013Custom accuracy so low?",
+    "expected_behaviour": "Read the key-gap column.",
+    "gold_standard": "Application \u2014 Custom (all): 12.9% \u2014 1,048 unverified CIs; Phase 2 service mapping due Q2 2025.",
+    "notes": "",
+    "files": [
+      "dataset/image/img_07_cmdb_health_scorecard.png"
+    ]
+  },
+  {
+    "id": "image-Stan-29",
+    "category": "image",
+    "sheet": "Standard Images (12 files)",
+    "file_name": "img_08_change_flowchart.png",
+    "file_path": "dataset/image/img_08_change_flowchart.png",
+    "file_exists": true,
+    "query_type": "Extraction",
+    "test_query": "Which swim lane holds the 'Approved?' diamond and what happens on each path?",
+    "expected_behaviour": "Read the CAB lane + branches.",
+    "gold_standard": "The CAB / Approvers lane. YES \u2192 Schedule Window; NO \u2192 REJECT (return to Requester).",
+    "notes": "",
+    "files": [
+      "dataset/image/img_08_change_flowchart.png"
+    ]
+  },
+  {
+    "id": "image-Stan-30",
+    "category": "image",
+    "sheet": "Standard Images (12 files)",
+    "file_name": "img_08_change_flowchart.png",
+    "file_path": "dataset/image/img_08_change_flowchart.png",
+    "file_exists": true,
+    "query_type": "Extraction",
+    "test_query": "What is the CAB approval lead time for Normal-High?",
+    "expected_behaviour": "Read the SLA timings panel.",
+    "gold_standard": "Normal-High = 5 business days lead time",
+    "notes": "",
+    "files": [
+      "dataset/image/img_08_change_flowchart.png"
+    ]
+  },
+  {
+    "id": "image-Stan-31",
+    "category": "image",
+    "sheet": "Standard Images (12 files)",
+    "file_name": "img_08_change_flowchart.png",
+    "file_path": "dataset/image/img_08_change_flowchart.png",
+    "file_exists": true,
+    "query_type": "Extraction",
+    "test_query": "What is the final step and its SLA?",
+    "expected_behaviour": "Read the last box + SLA panel.",
+    "gold_standard": "Step 6 PIR & Close \u2014 post-implementation review within 3 business days; CMDB must be updated.",
+    "notes": "",
+    "files": [
+      "dataset/image/img_08_change_flowchart.png"
+    ]
+  },
+  {
+    "id": "image-Stan-32",
+    "category": "image",
+    "sheet": "Standard Images (12 files)",
+    "file_name": "img_08_change_flowchart.png",
+    "file_path": "dataset/image/img_08_change_flowchart.png",
+    "file_exists": true,
+    "query_type": "Extraction",
+    "test_query": "What happens at step 2 and its SLA?",
+    "expected_behaviour": "Read step 2 + SLA panel.",
+    "gold_standard": "Step 2 Completeness Check \u2014 Change Manager responds within 24 hours; incomplete RFCs are rejected.",
+    "notes": "",
+    "files": [
+      "dataset/image/img_08_change_flowchart.png"
+    ]
+  },
+  {
+    "id": "image-Stan-33",
+    "category": "image",
+    "sheet": "Standard Images (12 files)",
+    "file_name": "img_09_vendor_scorecard.png",
+    "file_path": "dataset/image/img_09_vendor_scorecard.png",
+    "file_exists": true,
+    "query_type": "Extraction",
+    "test_query": "Which vendor is marked EXIT and what drove it?",
+    "expected_behaviour": "Read the status + recommendation columns.",
+    "gold_standard": "Rackspace \u2014 Hosting (64/100, EXIT): 'Do not renew Jul 2025 \u2014 3 Q4 incidents attributed to them'.",
+    "notes": "",
+    "files": [
+      "dataset/image/img_09_vendor_scorecard.png"
+    ]
+  },
+  {
+    "id": "image-Stan-34",
+    "category": "image",
+    "sheet": "Standard Images (12 files)",
+    "file_name": "img_09_vendor_scorecard.png",
+    "file_path": "dataset/image/img_09_vendor_scorecard.png",
+    "file_exists": true,
+    "query_type": "Extraction",
+    "test_query": "Which vendor has the highest score and what recommendation?",
+    "expected_behaviour": "Read the score column.",
+    "gold_standard": "NetGuard Systems \u2014 94/100 (EXCELLENT): 'Expand \u2014 best performer; managed network monitoring H2 2025'.",
+    "notes": "",
+    "files": [
+      "dataset/image/img_09_vendor_scorecard.png"
+    ]
+  },
+  {
+    "id": "image-Stan-35",
+    "category": "image",
+    "sheet": "Standard Images (12 files)",
+    "file_name": "img_09_vendor_scorecard.png",
+    "file_path": "dataset/image/img_09_vendor_scorecard.png",
+    "file_exists": true,
+    "query_type": "Extraction",
+    "test_query": "What is the score range \u2014 highest and lowest?",
+    "expected_behaviour": "Read all scores.",
+    "gold_standard": "Range 64\u201394: lowest Rackspace 64/100, highest NetGuard 94/100.",
+    "notes": "",
+    "files": [
+      "dataset/image/img_09_vendor_scorecard.png"
+    ]
+  },
+  {
+    "id": "image-Stan-36",
+    "category": "image",
+    "sheet": "Standard Images (12 files)",
+    "file_name": "img_09_vendor_scorecard.png",
+    "file_path": "dataset/image/img_09_vendor_scorecard.png",
+    "file_exists": true,
+    "query_type": "Extraction",
+    "test_query": "What action is recommended for Wipro?",
+    "expected_behaviour": "Read the Wipro row.",
+    "gold_standard": "Wipro \u2014 Infra MSP (71/100, POOR): 'Issue PIN Feb 2025 \u2014 SLA dropped 97%\u219289% in 6 months'.",
+    "notes": "",
+    "files": [
+      "dataset/image/img_09_vendor_scorecard.png"
+    ]
+  },
+  {
+    "id": "image-Stan-37",
+    "category": "image",
+    "sheet": "Standard Images (12 files)",
+    "file_name": "img_10_incident_trend.png",
+    "file_path": "dataset/image/img_10_incident_trend.png",
+    "file_exists": true,
+    "query_type": "Extraction",
+    "test_query": "Which month had the highest P1 Critical count?",
+    "expected_behaviour": "Read the red bars.",
+    "gold_standard": "March and September 2024",
+    "notes": "",
+    "files": [
+      "dataset/image/img_10_incident_trend.png"
+    ]
+  },
+  {
+    "id": "image-Stan-38",
+    "category": "image",
+    "sheet": "Standard Images (12 files)",
+    "file_name": "img_10_incident_trend.png",
+    "file_path": "dataset/image/img_10_incident_trend.png",
+    "file_exists": true,
+    "query_type": "Extraction",
+    "test_query": "Did the org meet its P1 SLA per the summary panel?",
+    "expected_behaviour": "Read the FY2024 summary box.",
+    "gold_standard": "No \u2014 Total P1: 42, P1 SLA 87.2% (BREACH vs target). Total P2: 197, P2 SLA 93.1% (BREACH).",
+    "notes": "",
+    "files": [
+      "dataset/image/img_10_incident_trend.png"
+    ]
+  },
+  {
+    "id": "image-Stan-39",
+    "category": "image",
+    "sheet": "Standard Images (12 files)",
+    "file_name": "img_10_incident_trend.png",
+    "file_path": "dataset/image/img_10_incident_trend.png",
+    "file_exists": true,
+    "query_type": "Extraction",
+    "test_query": "What does the green line represent?",
+    "expected_behaviour": "Read the line overlay + legend.",
+    "gold_standard": "The green line represents Resolution Rate %.",
+    "notes": "",
+    "files": [
+      "dataset/image/img_10_incident_trend.png"
+    ]
+  },
+  {
+    "id": "image-Stan-40",
+    "category": "image",
+    "sheet": "Standard Images (12 files)",
+    "file_name": "img_10_incident_trend.png",
+    "file_path": "dataset/image/img_10_incident_trend.png",
+    "file_exists": true,
+    "query_type": "Extraction",
+    "test_query": "Which month had the fewest P1 and best resolution?",
+    "expected_behaviour": "Read the bars + summary.",
+    "gold_standard": "April \u2014 2 P1, 98% resolution (best month per summary box).",
+    "notes": "",
+    "files": [
+      "dataset/image/img_10_incident_trend.png"
+    ]
+  },
+  {
+    "id": "image-Stan-41",
+    "category": "image",
+    "sheet": "Standard Images (12 files)",
+    "file_name": "img_11_servicenow_status.png",
+    "file_path": "dataset/image/img_11_servicenow_status.png",
+    "file_exists": true,
+    "query_type": "Reasoning",
+    "test_query": "What does this icon represent and what status?",
+    "expected_behaviour": "Interpret the small icon.",
+    "gold_standard": "A ServiceNow status/app icon with a green status indicator \u2014 represents operational/healthy status.",
+    "notes": "",
+    "files": [
+      "dataset/image/img_11_servicenow_status.png"
+    ]
+  },
+  {
+    "id": "image-Stan-42",
+    "category": "image",
+    "sheet": "Standard Images (12 files)",
+    "file_name": "img_11_servicenow_status.png",
+    "file_path": "dataset/image/img_11_servicenow_status.png",
+    "file_exists": true,
+    "query_type": "Reasoning",
+    "test_query": "What does the green colour indicate?",
+    "expected_behaviour": "Interpret the colour semantics.",
+    "gold_standard": "Green indicates OK / operational / healthy status (standard RAG convention).",
+    "notes": "",
+    "files": [
+      "dataset/image/img_11_servicenow_status.png"
+    ]
+  },
+  {
+    "id": "image-Stan-43",
+    "category": "image",
+    "sheet": "Standard Images (12 files)",
+    "file_name": "img_11_servicenow_status.png",
+    "file_path": "dataset/image/img_11_servicenow_status.png",
+    "file_exists": true,
+    "query_type": "Extraction",
+    "test_query": "What format is this and its typical use?",
+    "expected_behaviour": "Identify the format.",
+    "gold_standard": "ICO format (256x256) \u2014 typically used as a browser favicon or app/desktop icon.",
+    "notes": "",
+    "files": [
+      "dataset/image/img_11_servicenow_status.png"
+    ]
+  },
+  {
+    "id": "image-Stan-45",
+    "category": "image",
+    "sheet": "Standard Images (12 files)",
+    "file_name": "img_12_compliance_audit.png",
+    "file_path": "dataset/image/img_12_compliance_audit.png",
+    "file_exists": true,
+    "query_type": "Extraction",
+    "test_query": "What is the overall compliance score and how many controls passed? Also state how many failed and whether remediation is in place.",
+    "expected_behaviour": "Read the title/footer.",
+    "gold_standard": "84.0% overall \u2014 100 of 119 controls passed; 12 failures all with documented remediation plans.",
+    "notes": "",
+    "files": [
+      "dataset/image/img_12_compliance_audit.png"
+    ]
+  },
+  {
+    "id": "image-Stan-46",
+    "category": "image",
+    "sheet": "Standard Images (12 files)",
+    "file_name": "img_12_compliance_audit.png",
+    "file_path": "dataset/image/img_12_compliance_audit.png",
+    "file_exists": true,
+    "query_type": "Extraction",
+    "test_query": "Which domains achieved 100% compliance?",
+    "expected_behaviour": "Read the Compliance column.",
+    "gold_standard": "A.5 Information Security Policies, A.10 Cryptography, and SOC 2 Availability A1 \u2014 all 100%.",
+    "notes": "",
+    "files": [
+      "dataset/image/img_12_compliance_audit.png"
+    ]
+  },
+  {
+    "id": "image-Stan-47",
+    "category": "image",
+    "sheet": "Standard Images (12 files)",
+    "file_name": "img_12_compliance_audit.png",
+    "file_path": "dataset/image/img_12_compliance_audit.png",
+    "file_exists": true,
+    "query_type": "Extraction",
+    "test_query": "Which domain has the lowest compliance and the finding?",
+    "expected_behaviour": "Read the table for the minimum.",
+    "gold_standard": "A.15 Supplier Relationships \u2014 71.4% (HIGH); finding CF-2024-004: DataVault annual review overdue.",
+    "notes": "",
+    "files": [
+      "dataset/image/img_12_compliance_audit.png"
+    ]
+  },
+  {
+    "id": "image-Stan-48",
+    "category": "image",
+    "sheet": "Standard Images (12 files)",
+    "file_name": "img_12_compliance_audit.png",
+    "file_path": "dataset/image/img_12_compliance_audit.png",
+    "file_exists": true,
+    "query_type": "Extraction",
+    "test_query": "For Access Control (A.9): how many controls were tested and passed, how many failed, and what was the compliance % and key finding(s)?",
+    "expected_behaviour": "Read the A.9 row.",
+    "gold_standard": "A.9 \u2014 Access Control: 18 controls tested, 15 passed, 2 failed, 1 exception \u2014 83.3% compliance (HIGH risk). Findings: CF-2024-001 (14 admin accounts without MFA) and CF-2024-010 (4 orphaned accounts pending removal).",
+    "notes": "",
+    "files": [
+      "dataset/image/img_12_compliance_audit.png"
+    ]
+  },
+  {
+    "id": "image-Larg-49",
+    "category": "image",
+    "sheet": "Large Files (6MB-75MB)",
+    "file_name": "img_L1_sla_compliance_detail.png",
+    "file_path": "dataset/image/img_L1_sla_compliance_detail.png",
+    "file_exists": true,
+    "query_type": "Extraction",
+    "test_query": "What are all four KPI card values and which show BREACH?",
+    "expected_behaviour": "Read the 4 KPI cards.",
+    "gold_standard": "P1 Resolution 84.2% (BREACH), P2 Resolution 91.7% (BREACH), P3 Resolution 94.3% (MET), Availability 99.71% (BREACH). 3 of 4 breach.",
+    "notes": "",
+    "files": [
+      "dataset/image/img_L1_sla_compliance_detail.png"
+    ]
+  },
+  {
+    "id": "image-Larg-50",
+    "category": "image",
+    "sheet": "Large Files (6MB-75MB)",
+    "file_name": "img_L1_sla_compliance_detail.png",
+    "file_path": "dataset/image/img_L1_sla_compliance_detail.png",
+    "file_exists": true,
+    "query_type": "Extraction",
+    "test_query": "Which vendor has the most SLA breaches in Q1 and how many?",
+    "expected_behaviour": "Read the vendor table breaches column.",
+    "gold_standard": "DataVault Inc. with 2 SLA breaches (status MEDIUM-HIGH); SwiftOps Ltd. has 1.",
+    "notes": "",
+    "files": [
+      "dataset/image/img_L1_sla_compliance_detail.png"
+    ]
+  },
+  {
+    "id": "image-Larg-51",
+    "category": "image",
+    "sheet": "Large Files (6MB-75MB)",
+    "file_name": "img_L1_sla_compliance_detail.png",
+    "file_path": "dataset/image/img_L1_sla_compliance_detail.png",
+    "file_exists": true,
+    "query_type": "Reasoning",
+    "test_query": "Is the P1 breach rate improving or worsening across Q1? Cite the monthly values.",
+    "expected_behaviour": "Read the monthly bar chart trend.",
+    "gold_standard": "Improving - January 50.0%, February 40.0%, March 16.7%; downward each month though still above the <1% target.",
+    "notes": "",
+    "files": [
+      "dataset/image/img_L1_sla_compliance_detail.png"
+    ]
+  },
+  {
+    "id": "image-Larg-52",
+    "category": "image",
+    "sheet": "Large Files (6MB-75MB)",
+    "file_name": "img_L1_sla_compliance_detail.png",
+    "file_path": "dataset/image/img_L1_sla_compliance_detail.png",
+    "file_exists": true,
+    "query_type": "Extraction",
+    "test_query": "Which vendor has the highest Q1 score and which the lowest?",
+    "expected_behaviour": "Read the Q1 Score column.",
+    "gold_standard": "Highest NetGuard Systems 94/100; lowest SwiftOps Ltd. 71/100.",
+    "notes": "",
+    "files": [
+      "dataset/image/img_L1_sla_compliance_detail.png"
+    ]
+  },
+  {
+    "id": "image-Larg-53",
+    "category": "image",
+    "sheet": "Large Files (6MB-75MB)",
+    "file_name": "img_L2_patch_matrix_hires.png",
+    "file_path": "dataset/image/img_L2_patch_matrix_hires.png",
+    "file_exists": true,
+    "query_type": "Extraction",
+    "test_query": "How many platforms are assessed in this matrix?",
+    "expected_behaviour": "Count the platform rows.",
+    "gold_standard": "11 platforms (Windows 11, Win10 22H2, Win10 21H2, WS2022, WS2019, RHEL 9.x, Ubuntu 22.04, Ubuntu 20.04, macOS Sonoma, ESXi 8, Cisco IOS-XE).",
+    "notes": "",
+    "files": [
+      "dataset/image/img_L2_patch_matrix_hires.png"
+    ]
+  },
+  {
+    "id": "image-Larg-54",
+    "category": "image",
+    "sheet": "Large Files (6MB-75MB)",
+    "file_name": "img_L2_patch_matrix_hires.png",
+    "file_path": "dataset/image/img_L2_patch_matrix_hires.png",
+    "file_exists": true,
+    "query_type": "Extraction",
+    "test_query": "Which platforms are in BREACH and their 72-hr compliance?",
+    "expected_behaviour": "Read the status column.",
+    "gold_standard": "Windows Server 2019 (71.8%) and VMware ESXi 8.0 U2 (50.0%).",
+    "notes": "",
+    "files": [
+      "dataset/image/img_L2_patch_matrix_hires.png"
+    ]
+  },
+  {
+    "id": "image-Larg-55",
+    "category": "image",
+    "sheet": "Large Files (6MB-75MB)",
+    "file_name": "img_L2_patch_matrix_hires.png",
+    "file_path": "dataset/image/img_L2_patch_matrix_hires.png",
+    "file_exists": true,
+    "query_type": "Extraction",
+    "test_query": "What does the TOTAL/AVERAGE row show?",
+    "expected_behaviour": "Read the summary row.",
+    "gold_standard": "2,520 total hosts, 97.1% average 72-hr compliance, 8 missing Critical, 89 missing High.",
+    "notes": "",
+    "files": [
+      "dataset/image/img_L2_patch_matrix_hires.png"
+    ]
+  },
+  {
+    "id": "image-Larg-56",
+    "category": "image",
+    "sheet": "Large Files (6MB-75MB)",
+    "file_name": "img_L2_patch_matrix_hires.png",
+    "file_path": "dataset/image/img_L2_patch_matrix_hires.png",
+    "file_exists": true,
+    "query_type": "Reasoning",
+    "test_query": "Which platform is fully COMPLIANT and why is it notable?",
+    "expected_behaviour": "Read the status column.",
+    "gold_standard": "RHEL 9.x (all) - 100% on both windows, the only COMPLIANT platform; notable as fully Ansible-automated.",
+    "notes": "",
+    "files": [
+      "dataset/image/img_L2_patch_matrix_hires.png"
+    ]
+  },
+  {
+    "id": "image-Larg-57",
+    "category": "image",
+    "sheet": "Large Files (6MB-75MB)",
+    "file_name": "img_L3_vendor_scorecard_xl.png",
+    "file_path": "dataset/image/img_L3_vendor_scorecard_xl.png",
+    "file_exists": true,
+    "query_type": "Extraction",
+    "test_query": "List all vendors by STATUS label - how many GOOD, EXCELLENT, POOR, FAIR, EXIT?",
+    "expected_behaviour": "Read the status column for all 10.",
+    "gold_standard": "EXCELLENT: NetGuard, PwC (2). GOOD: Accenture, Cognizant, IBM, CloudStore, InfraLink (5). FAIR: DataVault (1). POOR: Wipro (1). EXIT: Rackspace (1).",
+    "notes": "",
+    "files": [
+      "dataset/image/img_L3_vendor_scorecard_xl.png"
+    ]
+  },
+  {
+    "id": "image-Larg-58",
+    "category": "image",
+    "sheet": "Large Files (6MB-75MB)",
+    "file_name": "img_L3_vendor_scorecard_xl.png",
+    "file_path": "dataset/image/img_L3_vendor_scorecard_xl.png",
+    "file_exists": true,
+    "query_type": "Extraction",
+    "test_query": "Which vendor shows the steepest declining trend and its value?",
+    "expected_behaviour": "Read the Trend column.",
+    "gold_standard": "Rackspace - Hosting at -12pp (steepest decline), status EXIT.",
+    "notes": "",
+    "files": [
+      "dataset/image/img_L3_vendor_scorecard_xl.png"
+    ]
+  },
+  {
+    "id": "image-Larg-59",
+    "category": "image",
+    "sheet": "Large Files (6MB-75MB)",
+    "file_name": "img_L3_vendor_scorecard_xl.png",
+    "file_path": "dataset/image/img_L3_vendor_scorecard_xl.png",
+    "file_exists": true,
+    "query_type": "Extraction",
+    "test_query": "What performance improvement is required of Wipro, and what corrective action has been issued?",
+    "expected_behaviour": "Read the Wipro recommendation.",
+    "gold_standard": "Wipro - Infra MSP (71/100, POOR) must recover its SLA by 8 percentage points \u2014 from the current 89% back to the 97% target (reversing the -8pp decline). A Performance Improvement Notice (PIN) is to be issued in Feb 2025 to drive this recovery.",
+    "notes": "",
+    "files": [
+      "dataset/image/img_L3_vendor_scorecard_xl.png"
+    ]
+  },
+  {
+    "id": "image-Larg-60",
+    "category": "image",
+    "sheet": "Large Files (6MB-75MB)",
+    "file_name": "img_L3_vendor_scorecard_xl.png",
+    "file_path": "dataset/image/img_L3_vendor_scorecard_xl.png",
+    "file_exists": true,
+    "query_type": "Extraction",
+    "test_query": "How many vendors had zero SLA breaches in Q1 and name them?",
+    "expected_behaviour": "Read the Breaches column.",
+    "gold_standard": "7 vendors with 0 breaches: Accenture, Cognizant, IBM, CloudStore, NetGuard, InfraLink and PwC.",
+    "notes": "",
+    "files": [
+      "dataset/image/img_L3_vendor_scorecard_xl.png"
+    ]
+  },
+  {
+    "id": "image-Larg-61",
+    "category": "image",
+    "sheet": "Large Files (6MB-75MB)",
+    "file_name": "img_L4_capacity_planning_xl.png",
+    "file_path": "dataset/image/img_L4_capacity_planning_xl.png",
+    "file_exists": true,
+    "query_type": "Extraction",
+    "test_query": "Which action has the most urgent deadline and when?",
+    "expected_behaviour": "Read the Decision Date column for the earliest.",
+    "gold_standard": "GPU-Farm-01 A100 - decision date 2025-01-24 (earliest), add 4x p3.8xl reserved instances ($220,000).",
+    "notes": "",
+    "files": [
+      "dataset/image/img_L4_capacity_planning_xl.png"
+    ]
+  },
+  {
+    "id": "image-Larg-62",
+    "category": "image",
+    "sheet": "Large Files (6MB-75MB)",
+    "file_name": "img_L4_capacity_planning_xl.png",
+    "file_path": "dataset/image/img_L4_capacity_planning_xl.png",
+    "file_exists": true,
+    "query_type": "Extraction",
+    "test_query": "Which systems are rated LOW risk and the recommendation?",
+    "expected_behaviour": "Read the Risk column for LOW.",
+    "gold_standard": "PROD-VMware-01 EMEA (68.2%) and SAN Secondary AFF (64.0%) - both LOW, no action, review at Q3 checkpoint.",
+    "notes": "",
+    "files": [
+      "dataset/image/img_L4_capacity_planning_xl.png"
+    ]
+  },
+  {
+    "id": "image-Larg-63",
+    "category": "image",
+    "sheet": "Large Files (6MB-75MB)",
+    "file_name": "img_L4_capacity_planning_xl.png",
+    "file_path": "dataset/image/img_L4_capacity_planning_xl.png",
+    "file_exists": true,
+    "query_type": "Reasoning",
+    "test_query": "Comparing SAN Primary and Backup Target, which runs out of capacity first?",
+    "expected_behaviour": "Compare Months to Full.",
+    "gold_standard": "Backup Target ME5 runs out first - 6.3 months vs SAN Primary's 9.3 months.",
+    "notes": "",
+    "files": [
+      "dataset/image/img_L4_capacity_planning_xl.png"
+    ]
+  },
+  {
+    "id": "image-Larg-64",
+    "category": "image",
+    "sheet": "Large Files (6MB-75MB)",
+    "file_name": "img_L4_capacity_planning_xl.png",
+    "file_path": "dataset/image/img_L4_capacity_planning_xl.png",
+    "file_exists": true,
+    "query_type": "Extraction",
+    "test_query": "Which two systems are CRITICAL and their utilization?",
+    "expected_behaviour": "Read the Risk column for CRITICAL.",
+    "gold_standard": "GPU-Farm-01 A100 (98.1%) and PROD-VMware-02 APAC (94.7%).",
+    "notes": "",
+    "files": [
+      "dataset/image/img_L4_capacity_planning_xl.png"
+    ]
+  },
+  {
+    "id": "image-Larg-65",
+    "category": "image",
+    "sheet": "Large Files (6MB-75MB)",
+    "file_name": "img_L5_ops_monitoring_xl.png",
+    "file_path": "dataset/image/img_L5_ops_monitoring_xl.png",
+    "file_exists": true,
+    "query_type": "Extraction",
+    "test_query": "Which service is in OUTAGE and what does its key metric show?",
+    "expected_behaviour": "Read the OUTAGE row.",
+    "gold_standard": "APAC Core Net R1/R2/R3 - OUTAGE, 0.00% availability, BGP 0/6 peers UP, note INC0001234 P1 rollback in progress.",
+    "notes": "",
+    "files": [
+      "dataset/image/img_L5_ops_monitoring_xl.png"
+    ]
+  },
+  {
+    "id": "image-Larg-66",
+    "category": "image",
+    "sheet": "Large Files (6MB-75MB)",
+    "file_name": "img_L5_ops_monitoring_xl.png",
+    "file_path": "dataset/image/img_L5_ops_monitoring_xl.png",
+    "file_exists": true,
+    "query_type": "Extraction",
+    "test_query": "Which service is DEGRADED and what metric shows it?",
+    "expected_behaviour": "Read the amber DEGRADED row.",
+    "gold_standard": "Backup Jobs (Veeam) - DEGRADED, 97.10%, 487TB/600TB, 3 jobs failed, retry 23:00 UTC.",
+    "notes": "",
+    "files": [
+      "dataset/image/img_L5_ops_monitoring_xl.png"
+    ]
+  },
+  {
+    "id": "image-Larg-67",
+    "category": "image",
+    "sheet": "Large Files (6MB-75MB)",
+    "file_name": "img_L5_ops_monitoring_xl.png",
+    "file_path": "dataset/image/img_L5_ops_monitoring_xl.png",
+    "file_exists": true,
+    "query_type": "Extraction",
+    "test_query": "Count all services by RAG status - how many GREEN, AMBER, RED?",
+    "expected_behaviour": "Read all status rows + footer.",
+    "gold_standard": "12 GREEN (OPERATIONAL), 1 AMBER (DEGRADED - Veeam), 1 RED (OUTAGE - APAC Core Network).",
+    "notes": "",
+    "files": [
+      "dataset/image/img_L5_ops_monitoring_xl.png"
+    ]
+  },
+  {
+    "id": "image-Larg-68",
+    "category": "image",
+    "sheet": "Large Files (6MB-75MB)",
+    "file_name": "img_L5_ops_monitoring_xl.png",
+    "file_path": "dataset/image/img_L5_ops_monitoring_xl.png",
+    "file_exists": true,
+    "query_type": "Extraction",
+    "test_query": "What is the Kubernetes cluster status and pod count?",
+    "expected_behaviour": "Read the K8s row.",
+    "gold_standard": "K8s Clusters prod-01/02 - OPERATIONAL, 99.94%, 8,412 pods running, 12 pods pending (normal deploy).",
+    "notes": "",
+    "files": [
+      "dataset/image/img_L5_ops_monitoring_xl.png"
+    ]
+  },
+  {
+    "id": "split-01",
+    "category": "split",
+    "sheet": "Split \u2014 coherent sections within one document",
+    "file_name": "budget_report_8p.pdf",
+    "file_path": "dataset/split/budget_report_8p.pdf",
+    "file_exists": true,
+    "query_type": "Sectional split",
+    "expected_skill": "read-pdf",
+    "test_query": "Split this PDF into coherent sections so I can read each part separately.",
+    "expected_behaviour": "One document, six budget sections. Split by section structure, not by page and not by document type.",
+    "gold_standard": "Recognises a single 8-page report and splits it into its coherent sections \u2014 Engineering Budget, IT Operations Budget, Security Budget, Platform Budget, Data & Analytics Budget, HR Tech Budget (plus the intro) \u2014 named by heading with page ranges. NOT 8 one-page files, NOT a single unsplit file.",
+    "notes": "Regression case for sectional vs document splitting.",
+    "files": [
+      "dataset/split/budget_report_8p.pdf"
+    ]
+  },
+  {
+    "id": "split-02",
+    "category": "split",
+    "sheet": "Split \u2014 topic sections, no outline",
+    "file_name": "mixed_topics_8p.pdf",
+    "file_path": "dataset/split/mixed_topics_8p.pdf",
+    "file_exists": true,
+    "query_type": "Sectional split",
+    "expected_skill": "read-pdf",
+    "test_query": "Split this document by coherent sections.",
+    "expected_behaviour": "Three topic sections at pages 1-3, 4-5, 6-8. Not 8 page files, not 2 documents.",
+    "gold_standard": "Splits into exactly 3 files by topic \u2014 Finance Overview (pages 1-3), Hiring Policy (pages 4-5), Stock and Equity Programme (pages 6-8) \u2014 named from the headings. NOT 8 one-page files, NOT 2 files split on the POLICY type-noun, NOT one unsplit file.",
+    "notes": "No PDF outline; cuts must come from heading style or a content read.",
+    "files": [
+      "dataset/split/mixed_topics_8p.pdf"
+    ]
+  },
+  {
+    "id": "split-03",
+    "category": "split",
+    "sheet": "Split \u2014 bundle with an untyped document",
+    "file_name": "four_doc_bundle_5p.pdf",
+    "file_path": "dataset/split/four_doc_bundle_5p.pdf",
+    "file_exists": true,
+    "query_type": "Document split",
+    "expected_skill": "read-pdf",
+    "test_query": "Split this bundle into separate documents.",
+    "expected_behaviour": "Four documents. detect_boundaries reports only 3 because the market outlook carries no type-noun, so the read must add the missing boundary.",
+    "gold_standard": "Splits into 4 files \u2014 invoice INV-2025-0442 (page 1), receipt (page 2), purchase order PO-88213 (page 3), and the Quarterly Market Outlook (pages 4-5). The market outlook has no type-noun title so detect_boundaries merges it into the PO unless caught by reading. NOT 3 files, NOT 5 one-page files.",
+    "notes": "Regression case for the untyped-document under-split; falls back to content coherence.",
+    "files": [
+      "dataset/split/four_doc_bundle_5p.pdf"
+    ]
+  }
+]

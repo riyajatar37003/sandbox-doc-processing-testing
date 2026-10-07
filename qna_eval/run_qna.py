@@ -30,6 +30,7 @@ Credentials come from .env.instance (next to this script) or CLI flags/env vars:
 from __future__ import annotations
 
 import argparse
+import dataclasses
 import json
 import os
 import sys
@@ -102,14 +103,18 @@ def connect(cfg: NextWaveConfig, fetch_trace: bool) -> NextWaveClient:
 
 
 def ask_one(client: NextWaveClient, case: dict, fetch_trace: bool, timeout: float) -> dict:
-    cid = case.get("id") or Path(case["file"]).stem
-    file_path = Path(case["file"])
-    question = case["question"]
+    file_str = case.get("file") or case.get("file_path")
+    question = case.get("question") or case.get("test_query")
+    cid = case.get("id") or Path(file_str).stem
+    file_path = Path(file_str)
     log(f"[{cid}] uploading {file_path.name} and asking: {question[:80]}...")
 
     t0 = time.time()
     record: dict[str, Any] = {
         "id": cid, "file": str(file_path), "question": question,
+        "gold_standard": case.get("gold_standard", ""),
+        "expected_behaviour": case.get("expected_behaviour", ""),
+        "notes": case.get("notes", ""),
         "answer": "", "error": "", "runs": [], "thread_id": "",
         "ttfb_ms": 0, "response_time_ms": 0, "elapsed_s": 0,
     }
@@ -154,12 +159,25 @@ def main() -> None:
     ap.add_argument("--no-trace", action="store_true", help="Skip AIA sandbox-trace fetch (faster)")
     ap.add_argument("--check-session", action="store_true", help="Test auth and exit")
     ap.add_argument("--output", default="", help="Path to save result JSON (default: results/<timestamp>.json)")
+    ap.add_argument("--resume", action="store_true", help="If --output file already exists, skip cases whose id already succeeded in it and only run the rest")
 
     ap.add_argument("--host", default=os.getenv("SNC_HOST", ""))
     ap.add_argument("--protocol", default=os.getenv("SNC_PROTOCOL", "https"))
     ap.add_argument("--instance-name", default=os.getenv("INSTANCE_NAME", ""))
     ap.add_argument("--username", default=os.getenv("NW_USERNAME", ""))
     ap.add_argument("--password", default=os.getenv("NW_PASSWORD", ""))
+    ap.add_argument(
+        "--username-pool", default=os.getenv(
+            "NW_USERNAME_POOL",
+            "otto.eval,otto.eval1,otto.eval2,otto.eval3,otto.eval4,otto.eval5,otto.eval6",
+        ),
+        help="Comma-separated accounts (same password as --username) for --workers > 1. "
+             "The backend serializes conversation creation per account/session, so parallel "
+             "workers sharing one login collide on a server-side session lock; giving each "
+             "worker a distinct account from this pool (round-robin by worker slot) avoids that. "
+             "Defaults to the shared nwdemo test pool (otto.eval + otto.eval1..6); override with "
+             "--username-pool or NW_USERNAME_POOL for a different instance.",
+    )
     ap.add_argument("--oauth-client-id", default=os.getenv("OAUTH_CLIENT_ID", "46e42d08770746f1802167828fcc6132"))
     ap.add_argument("--oauth-redirect-uri", default=os.getenv("OAUTH_REDIRECT_URI", "/api/snc/aiexauth/oauth/authorize"))
     ap.add_argument("--deployment-doc-id", default=os.getenv("DEPLOYMENT_DOC_ID", ""))
@@ -203,6 +221,13 @@ def main() -> None:
     out_path = Path(args.output) if args.output else RESULTS_DIR / f"qna_{time.strftime('%Y%m%d_%H%M%S')}.json"
 
     results: list[dict] = []
+    if args.resume and out_path.exists():
+        results = json.loads(out_path.read_text())
+        done_ids = {r["id"] for r in results if not r.get("error")}
+        before = len(cases)
+        cases = [c for c in cases if (c.get("id") or Path(c.get("file") or c.get("file_path")).stem) not in done_ids]
+        log(f"--resume: {len(done_ids)} case(s) already done in {out_path}, {before - len(cases)} skipped, {len(cases)} remaining")
+
     write_lock = threading.Lock()
 
     def _save() -> None:
@@ -215,17 +240,28 @@ def main() -> None:
             results.append(ask_one(client, case, fetch_trace, args.timeout))
             _save()
     else:
-        log(f"Running {len(cases)} case(s) with {args.workers} parallel worker(s)...")
+        pool = [u.strip() for u in args.username_pool.split(",") if u.strip()] or [args.username]
+        if len(pool) < args.workers:
+            log(f"WARNING: --username-pool has only {len(pool)} account(s) for {args.workers} workers -- "
+                f"workers sharing an account WILL collide on the server-side session lock (error 100-109-1000). "
+                f"Pass --username-pool with >= --workers distinct accounts to avoid this.")
+        log(f"Running {len(cases)} case(s) with {args.workers} parallel worker(s), "
+            f"accounts: {[pool[i % len(pool)] for i in range(args.workers)]}")
 
         # Pre-authenticate all workers SEQUENTIALLY first. Logging in from the
         # same account concurrently can invalidate each other's OAuth auth
         # codes (seen as "oauth_token.do failed: 401 access_denied"), so each
         # worker's one-time login happens before any of them start sending
-        # messages, never interleaved with another worker's login.
+        # messages, never interleaved with another worker's login. Each
+        # worker also gets its own account (round-robin over --username-pool)
+        # since the backend serializes conversation creation per account/
+        # session -- workers sharing one login collide on that lock too.
         worker_clients: list[NextWaveClient] = []
         for wi in range(args.workers):
-            worker_clients.append(connect(cfg, fetch_trace))
-            log(f"  worker {wi + 1}/{args.workers} authenticated")
+            worker_username = pool[wi % len(pool)]
+            worker_cfg = dataclasses.replace(cfg, username=worker_username)
+            worker_clients.append(connect(worker_cfg, fetch_trace))
+            log(f"  worker {wi + 1}/{args.workers} authenticated as {worker_username}")
 
         _thread_local = threading.local()
         _next_slot = iter(range(args.workers))
@@ -247,10 +283,15 @@ def main() -> None:
             try:
                 return ask_one(_client_for_thread(), case, fetch_trace, args.timeout)
             except Exception as e:  # noqa: BLE001
-                cid = case.get("id") or Path(case["file"]).stem
+                file_str = case.get("file") or case.get("file_path", "")
+                cid = case.get("id") or Path(file_str).stem
                 log(f"[{cid}] WORKER ERROR: {type(e).__name__}: {e}")
                 return {
-                    "id": cid, "file": case.get("file", ""), "question": case.get("question", ""),
+                    "id": cid, "file": file_str,
+                    "question": case.get("question") or case.get("test_query", ""),
+                    "gold_standard": case.get("gold_standard", ""),
+                    "expected_behaviour": case.get("expected_behaviour", ""),
+                    "notes": case.get("notes", ""),
                     "answer": "", "error": f"{type(e).__name__}: {e}", "runs": [], "thread_id": "",
                     "ttfb_ms": 0, "response_time_ms": 0, "elapsed_s": 0,
                 }

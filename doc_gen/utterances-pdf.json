@@ -1,0 +1,20 @@
+{
+  "description": "Ordered list of turns sent to the agent for each source file. All turns run on the SAME thread, in array order. Add/remove/reorder entries here to change the flow — no code changes needed. The script does not hardcode a turn count.",
+  "turns": [
+    {
+      "id": "extract",
+      "label": "Key point extraction",
+      "utterance": "Extract the important key points, concepts, and details from the attached file, including all table info, figure info, and chart info (with their exact values). Summarize in your own words -- do not just copy sentences or headers verbatim from the file. Ignore anything that is pipeline/extraction metadata about the file itself (e.g. a '# Source Package:' header line, a page/chart-count note, or '## Page N' markers) -- that is not real content and must not appear in your extraction.",
+      "attach_source_file": true,
+      "expect_file_attachment": false
+    },
+    {
+      "id": "generate_pdf",
+      "label": "PDF generation",
+      "utterance": "Generate a PDF from the key points you just extracted. Give every page its own headline derived from the actual topic on that page -- never a source filename, a page number, or a page/chart-count note.",
+      "attach_source_file": false,
+      "expect_file_attachment": true,
+      "save_as": "pdf"
+    }
+  ]
+}

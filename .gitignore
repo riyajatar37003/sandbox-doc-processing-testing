@@ -29,6 +29,9 @@ Thumbs.db
 .env.local
 .env.instance
 
+# Eval dataset (large binary files, fetched separately -- not committed)
+qna_eval/dataset/
+
 # Results and outputs (keep folder structure via .gitkeep, ignore data)
 qna_eval/results/*
 !qna_eval/results/.gitkeep
@@ -36,6 +39,16 @@ doc_gen/datasets/generated/*
 !doc_gen/datasets/generated/.gitkeep
 doc_gen/datasets/sources/*
 !doc_gen/datasets/sources/.gitkeep
+local-eval/doc_qna/results/*
+!local-eval/doc_qna/results/.gitkeep
+local-eval/doc_gen/datasets/generated/*
+!local-eval/doc_gen/datasets/generated/.gitkeep
 
 # Debug dumps
 debug/
+
+# Captured local session (contains live tokens) -- re-create with init_session.py
+local-eval/doc_qna/session.json
+local-eval/doc_qna/session.json.bak
+local-eval/doc_gen/session.json
+local-eval/doc_gen/session.json.bak

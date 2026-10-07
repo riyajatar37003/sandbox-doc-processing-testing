@@ -1,0 +1,21 @@
+{
+  "sessionId": "5ce2b5183bcbf61051a1da6eb5e45a95",
+  "instanceName": "qnaaia1",
+  "userId": "bc1aa73cffc63210f8ecffffffffff05",
+  "conversationId": "f35ea7f63b61875051a1da6eb5e45afd",
+  "authToken": "test-token",
+  "consumerAccountId": "d0e27dd43bcbf61051a1da6eb5e45a88",
+  "pageContext": {
+    "nowAssistDeploymentId": "7bd9820f14475650f87711349c1171be",
+    "deploymentDocumentId": "c86a62e2c7022010099a308dc7c26022",
+    "deploymentDocumentTable": "sys_ux_app"
+  },
+  "customContext": {
+    "isFormDirty": false,
+    "deviceId": "74bc8741-8f24-4a6b-a361-203302d262c3"
+  },
+  "locationUrl": "http://localhost:8060/",
+  "clientInstanceId": "2300f8af-8639-4f82-ba5b-c4c95018e42e",
+  "applications": null,
+  "clientContext": null
+}
